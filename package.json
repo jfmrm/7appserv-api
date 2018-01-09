@@ -1,0 +1,34 @@
+{
+  "name": "7appserv-api",
+  "version": "1.0.0",
+  "description": "7appserv is a marketplace for house keeping services based on reversal auction",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon --exec babel-node server.js --inspect",
+    "firstStart": "npm install && nodemon --exec babel-node server.js --inspect"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jfmrm/7appserv-api.git"
+  },
+  "author": "João Filipe Moura",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jfmrm/7appserv-api/issues"
+  },
+  "homepage": "https://github.com/jfmrm/7appserv-api#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "morgan": "^1.9.0",
+    "rimraf": "^2.6.2"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "http": "0.0.0",
+    "nodemon": "^1.14.9",
+    "promise-mysql": "^3.1.5"
+  }
+}

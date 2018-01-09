@@ -1,0 +1,36 @@
+version: '2'
+
+services:
+  db:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: hgs21@2017
+    volumes:
+      - "./data/db:/var/lib/mysql"
+    ports:
+      - "3306:3306"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      MYSQL_ROOT_PASSWORD: hgs21@2017
+    ports:
+      - "8181:80"
+    links:
+        # for mysql container
+      - "db:db"
+  app:
+    build: .
+    ports:
+      - "80:3000"
+    depends_on:
+      - db
+    volumes:
+      - .:/www
+      - /www/node_modules
+    environment:
+       BAR_BANK_DB_HOST: db:3306
+       BAR_BANK_DB_USER: hgs21
+       BAR_BANK_DB_PASSWORD: hgs21@2017
+    networks:
+      default:
