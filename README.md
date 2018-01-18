@@ -13,3 +13,5 @@ After installing run the following commands (if you are not root user you might 
   docker-compose build
   docker-compose up
   ```
+
+The populate.js file is a function that tests all cruds, to use it uncomment its lines and its call on server.js file.
