@@ -43,8 +43,14 @@ export class Place {
   }
 
   remove() {
-    return Pool.query('DELETE FROM place WHERE id = ?', [this.id])
-      .then((results) => {
+    return this.address.remove()
+      .then((res) => {
+        if (!res) {
+          throw new Error('could not remove this places address')
+        } else {
+          return Pool.query('DELETE FROM place WHERE id = ?', [this.id])
+        }
+      }).then((results) => {
         if(results.affectedRows == 1) {
           return true
         } else {
