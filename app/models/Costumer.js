@@ -2,9 +2,10 @@ import { User, Place } from './';
 import { Pool } from '../../config';
 
 export class Costumer extends User {
-  constructor (firstName, lastName, email, password = null, contactNumber, places = []) {
+  constructor (firstName, lastName, email, password = null, contactNumber, places = [], costumerId) {
     super(firstName, lastName, email, password, contactNumber);
     this.places = places;
+    this.id = costumerId;
   }
 
   create() {
@@ -18,10 +19,9 @@ export class Costumer extends User {
   get(column, param) {
     return Pool.query('SELECT * FROM costumer where ' + column + ' = ?', [param])
       .then((results) => {
-        let costumer = new Costumer(results[0].first_name, results[0].last_name, results[0].email, results[0].password, results[0].cell_phone)
-        return { costumer: costumer, id: results[0].id }
-      }).then(({ costumer: costumer, id: id }) => {
-        return new Place().getListByCostumerId(id)
+        return new Costumer(results[0].first_name, results[0].last_name, results[0].email, results[0].password, results[0].cell_phone, null, results[0].id )
+      }).then((costumer) => {
+        return new Place().getListByCostumerId(costumer.id)
           .then((places) => {
             return { places: places, costumer: costumer }
           })

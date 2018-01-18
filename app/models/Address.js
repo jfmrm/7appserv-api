@@ -42,6 +42,6 @@ export class Address {
         } else {
           return false
         }
-      })
+      });
   }
 }
