@@ -1,4 +1,4 @@
-import { Costumer, Pro, ProVIP, Place, Address, Demand, ServiceType } from './app/models';
+import { Costumer, Pro, ProVIP, Place, Address, Demand, ServiceType, Service } from './app/models';
 import moment from 'moment';
 
 export function populate () {
@@ -109,4 +109,39 @@ export function populate () {
   //     })
   //   });
 
+
+//-------------------------------------------------------------------------------------
+//Service stuff
+
+  // let serviceType = new ServiceType(null, 'house cleaning');
+  // let costumer = new Costumer('joao', 'moura', 'joao@filipe.com', '123', '+1123456789');
+  // let address = new Address(null, 20, 'street', 'unit', 'city', 'st', 12345);
+  // let place = new Place(1, 1, 2, address);
+  // let pro = new Pro('pedro', 'Moura', 'pedro@moura.com', '123', '+1123456789', address , true, null, null, null);
+  //
+  // Promise.all([pro.create(), costumer.create(), place.create(), serviceType.create()])
+  //   .then((res) => {
+  //     let demand = new Demand(null, res[1], res[2], res[3], moment(Date.now()).format('YYYY-MM-DD HH:mm:ss'), 'details', true).create()
+  //     return { demand: demand, res: res }
+  //   }).then(({ demand: demand, res: res }) => {
+  //     return demand.then((demand) => {
+  //       let service = new Service(demand, res[0]).create()
+  //       return { service: service, demand: demand }
+  //     }).then(({ service: service, demand: demand }) => {
+  //       return service.then((service) => {
+  //         console.log(res)
+  //         console.log(service)
+  //         return Promise.all([
+  //           res[0].remove(),
+  //           res[1].remove(),
+  //           res[2].remove(),
+  //           res[3].remove(),
+  //           demand.remove(),
+  //           service.remove()
+  //         ])
+  //       })
+  //     }).then((res) => {
+  //       console.log(res)
+  //     })
+  //   });
 }

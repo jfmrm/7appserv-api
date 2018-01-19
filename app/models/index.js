@@ -6,3 +6,4 @@ export { Address }     from './Address';
 export { Place }       from './Place';
 export { Demand }      from './Demand';
 export { ServiceType } from './ServiceType';
+export { Service }     from './Service';
