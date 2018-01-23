@@ -5,7 +5,8 @@ import http from 'http';
 import { App } from './config';
 
 import { populate } from './populate';
-//populate();
+// populate();
+
 //listen on port
 http.createServer(App).listen(App.get('port'), function() {
   console.log('Express server listening on port ' + App.get('port'));
