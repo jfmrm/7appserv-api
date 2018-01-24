@@ -5,7 +5,7 @@ import http from 'http';
 import { App } from './config';
 
 import { populate } from './populate';
-// populate();
+populate();
 
 //listen on port
 http.createServer(App).listen(App.get('port'), function() {
