@@ -12,12 +12,12 @@ router.post('/costumer', (req, res) => {
   let contactNumber = req.body.contactNumber;
 
   if(!firstName || !lastName || !email || !password || !contactNumber) {
-    res.status(403).json({ message: 'missing arguments'});
+    res.status(400).json({ message: 'missing arguments'});
   } else {
     let costumer = new Costumer(firstName, lastName, email, password, contactNumber);
     costumer.create()
       .then((costumer) => {
-        res.status(200).json(costumer)
+        res.status(201).json(costumer)
       }).catch((error) => {
         res.status(500).json(error)
       });
@@ -35,7 +35,7 @@ router.post('/pro', (req, res) => {
   let hasInsurance = req.body.hasInsurance;
 
   if (!firstName || !lastName || !email || !password || !contactNumber || !address || !hasInsurance) {
-    res.status(403).json({ message: 'missing parameters' });
+    res.status(400).json({ message: 'missing parameters' });
   } else {
     new City().get('id', address.cityId)
       .then((city) => {
@@ -43,7 +43,7 @@ router.post('/pro', (req, res) => {
         let pro = new Pro(firstName, lastName, email, password, contactNumber, address, hasInsurance);
         return pro.create()
       }).then((pro) => {
-        res.status(200).json(pro)
+        res.status(201).json(pro)
       }).catch((error) => {
         res.status(500).json(error)
       });
@@ -60,7 +60,7 @@ router.put('/costumer', (req, res) => {
   let contactNumber = req.body.contactNumber;
 
   if(!firstName || !lastName || !email || !contactNumber) {
-    res.status(403).json({ message: 'missing parameters' });
+    res.status(400).json({ message: 'missing parameters' });
   } else {
     new Costumer(firstName, lastName, email, null, contactNumber).update()
       .then((costumer) => {
@@ -81,7 +81,7 @@ router.put('/pro', (req, res) => {
   let hasInsurance = req.body.hasInsurance;
 
   if(!firstName || !lastName || !email || !contactNumber || !address || !hasInsurance) {
-    res.status(403).json({ message: 'missing parameters' });
+    res.status(400).json({ message: 'missing parameters' });
   } else {
     new Pro().get('email', email)
       .then((pro) => {

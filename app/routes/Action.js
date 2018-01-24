@@ -13,7 +13,7 @@ router.post('/demand', (req, res) => {
   let details = req.body.details;
 
   if(!costumerId || !placeId || !serviceTypeId || !dueDate || !details) {
-    res.status(403).json({ message: "missing parameters" });
+    res.status(400).json({ message: "missing parameters" });
   } else {
     //retrieves demand dependecies
     Promise.all([
@@ -23,7 +23,7 @@ router.post('/demand', (req, res) => {
     ]).then((results) => {
       return new Demand(results[0], results[1], results[2], dueDate, details).create()
     }).then((demand) => {
-      res.status(200).json(demand)
+      res.status(201).json(demand)
     }).catch((error) => {
       res.status(500).json(error)
     });
@@ -39,7 +39,7 @@ router.put('/demand', (req, res) => {
   let details = req.body.details;
 
   if(!demandId || !placeId || !serviceTypeId || !dueDate || !details) {
-    res.status(403).json({ message: "missing parameters" });
+    res.status(400).json({ message: "missing parameters" });
   } else {
     //gets dependecies
     Promise.all([
@@ -57,5 +57,21 @@ router.put('/demand', (req, res) => {
 });
 
 //delete demand
-router.post('')
+router.delete('/demand', (req, res) => {
+  let demandId = req.query.demandId;
+
+  if(!demandId) {
+    res.status(400).json({ message: 'missing parameters' });
+  } else {
+    let demand = new Demand()
+    demand.id = demandId
+    demand.remove()
+      .then((deleted) => {
+        if (deleted) res.status(200).json({ message: 'demand successfully deleted' })
+      }).catch((error) => {
+        res.status(500).json(error)
+      });
+  }
+});
+
 export const ActionRouter = router;
