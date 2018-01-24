@@ -102,4 +102,22 @@ router.put('/pro', (req, res) => {
   }
 });
 
+router.delete('/costumer', (req, res) => {
+  let costumerId = req.query.costumerId;
+
+  if(!costumerId) {
+    res.status(400).json({ message: "missing parameters" })
+  } else {
+    let costumer = new Costumer();
+    costumer.id = costumerId;
+    costumer.remove()
+      .then((deleted) => {
+        if (deleted) res.status(200).json({ message: "Costumer successfully deleted" })
+      }).catch((error) => {
+        console.log(error)
+        res.status(500).json(error)
+      });
+  }
+})
+
 export const UserRouter = router;
