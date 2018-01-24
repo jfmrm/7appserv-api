@@ -2,7 +2,7 @@ import { Pool } from '../../config';
 import { Costumer, Place, ServiceType } from './';
 
 export class Demand {
-  constructor(demandId, costumer, place, serviceType, dueDate, details, isOpen, lastModified) {
+  constructor(costumer, place, serviceType, dueDate, details, isOpen, lastModified, demandId) {
     this.id = demandId;
     this.costumer = costumer;
     this.place = place;
@@ -24,7 +24,7 @@ export class Demand {
   get(column, param) {
     return Pool.query('SELECT * FROM demand WHERE ' + column + ' = ?', [param])
       .then((results) => {
-        return new Demand(results[0].id, results[0].costumer_id, results[0].place_id, results[0].service_type_id, results[0].due_date, results[0].details, results[0].is_open, results[0].last_modified)
+        return new Demand(results[0].costumer_id, results[0].place_id, results[0].service_type_id, results[0].due_date, results[0].details, results[0].is_open, results[0].last_modified, results[0].id)
       }).then((demand) => {
         return new Costumer().get('id', demand.costumer)
           .then((costumer) => {
