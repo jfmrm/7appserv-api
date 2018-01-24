@@ -50,4 +50,25 @@ router.post('/pro', (req, res) => {
   }
 });
 
+//from here needs authentication
+//edit Costumer
+//this method doesn't edit the email and the password, theese will have its own methods
+router.post('/costumer/edit', (req, res) => {
+  let firstName = req.body.firstName;
+  let lastName = req.body.lastName;
+  let email = req.body.email;
+  let contactNumber = req.body.contactNumber;
+
+  if(!firstName || !lastName || !email || !contactNumber) {
+    res.status(403).json({ message: 'missing parameters' });
+  } else {
+    new Costumer(firstName, lastName, email, null, contactNumber).update()
+      .then((costumer) => {
+        res.status(200).json(costumer)
+      }).catch((error) => {
+        res.status(500).json(error)
+      });
+  }
+});
+
 export const UserRouter = router;
