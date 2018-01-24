@@ -24,6 +24,7 @@ router.post('/costumer', (req, res) => {
   }
 });
 
+//creates new Pro
 router.post('/pro', (req, res) => {
   let firstName = req.body.firstName;
   let lastName = req.body.lastName;
