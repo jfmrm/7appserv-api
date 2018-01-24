@@ -102,6 +102,7 @@ router.put('/pro', (req, res) => {
   }
 });
 
+//delete costumer
 router.delete('/costumer', (req, res) => {
   let costumerId = req.query.costumerId;
 
@@ -115,6 +116,24 @@ router.delete('/costumer', (req, res) => {
         if (deleted) res.status(200).json({ message: "Costumer successfully deleted" })
       }).catch((error) => {
         console.log(error)
+        res.status(500).json(error)
+      });
+  }
+});
+
+//delete Pro
+router.delete('/pro', (req, res) => {
+  let proId = req.query.proId;
+
+  if(!proId) {
+    res.status(400).json({ message: "missing parameters" })
+  } else {
+    let pro = new Pro();
+    pro.id = proId;
+    pro.remove()
+      .then((deleted) => {
+        res.status(200).json({ message: "pro deleted successfully" })
+      }).catch((error) => {
         res.status(500).json(error)
       });
   }
