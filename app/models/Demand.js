@@ -54,7 +54,7 @@ export class Demand {
         if (res.affectedRows == 1) {
           return true
         } else {
-          return false
+          return new Error('Demand does not exist')
         }
       });
   }

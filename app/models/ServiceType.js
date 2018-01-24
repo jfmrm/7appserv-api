@@ -34,7 +34,7 @@ export class ServiceType {
         if(res.affectedRows == 1) {
           return true
         } else {
-          return false
+          return new Error('Service type does not exist')
         }
       });
   }

@@ -33,7 +33,7 @@ export class City {
         if (results.affectedRows == 1) {
           return true
         } else {
-          return false
+          return new Error('City does not exist')
         }
       });
   }

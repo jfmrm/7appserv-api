@@ -54,7 +54,7 @@ export class Place {
         if(results.affectedRows == 1) {
           return true
         } else {
-          return false
+          return new Error('does not exist')
         }
       });
   }

@@ -45,7 +45,7 @@ export class Address {
         if(results.affectedRows == 1) {
           return true
         } else {
-          return false
+          return new Error('Address does not exist')
         }
       });
   }

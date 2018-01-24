@@ -49,7 +49,7 @@ export class ProVIP extends Pro {
         if(result.affectedRows == 1) {
           return true
         } else {
-          return false
+          return new Error('Pro VIP does not exist')
         }
       });
   }

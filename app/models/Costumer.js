@@ -46,7 +46,7 @@ export class Costumer extends User {
         if(results.affectedRows == 1) {
           return true
         } else {
-          return false
+          return new Error('Costumer does not exist')
         }
       });
   }
