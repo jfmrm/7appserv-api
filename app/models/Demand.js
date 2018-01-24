@@ -41,8 +41,8 @@ export class Demand {
   }
 
   update() {
-    return Pool.query('UPDATE demand SET costumer_id = ?, place_id = ?, service_type_id = ?, due_date = ?, details = ?',
-    [this.costumerId, this.placeId, this.serviceTypeId, this.dueDate, this.details])
+    return Pool.query('UPDATE demand SET place_id = ?, service_type_id = ?, due_date = ?, details = ? WHERE id = ?',
+    [this.place.id, this.serviceType.id, this.dueDate, this.details, this.id])
       .then((restuls) => {
         return this.get('id', this.id)
       });
