@@ -1,4 +1,4 @@
-import { Costumer, Pro, ProVIP, Place, Address, Demand, ServiceType, Service } from './app/models';
+import { Costumer, Pro, ProVIP, Place, Address, Demand, ServiceType, Service, City } from './app/models';
 import moment from 'moment';
 
 export function populate () {
@@ -25,18 +25,29 @@ export function populate () {
 
 //---------------------------------------------------------------------------------------
 //address and place stuff
-
-  // let address = new Address(null, 20, 'street', 'unit', 'city', 'st', 12345);
-  // address.create()
-  //   .then((address) => {
+  // let city = new City('Tucson');
+  // let address = new Address('MEGASYSTEMS INC', '799 E DRAGRAM SUITE 5A', 'AZ', city, 85705);
+  // city.create()
+  //   .then((city) => {
+  //     console.log(city)
+  //     address.city = city
+  //     return address.create()
+  //   }).then((address) => {
   //     console.log(address)
-  //     address.street = 'rua'
+  //     address.zipCode = 12345
   //     return address.update()
   //   }).then((address) => {
   //     console.log(address)
-  //     return address.remove()
-  //   }).then((result) => {
-  //     console.log(result)
+  //     address.city.name = 'recife'
+  //     let city = address.city.update()
+  //     return { address: address, city: city }
+  //   }).then(({ address: address, city: city }) => {
+  //     return city.then((city) => {
+  //       console.log(city)
+  //       return Promise.all([city.remove(), address.remove()])
+  //     })
+  //   }).then((res) => {
+  //     console.log(res)
   //   });
 
   // let place = new Place(1, 1, 2, address);

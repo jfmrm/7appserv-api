@@ -1,19 +1,19 @@
 import { Pool } from '../../config';
+import { City } from './';
 
 export class Address {
-  constructor(addressId, numPlace, street, unit, city, state, zipCode) {
-    this.id = addressId;
-    this.numPlace = numPlace;
-    this.street = street;
-    this.unit = unit;
+  constructor(addressLine, addressLine2, district, city, zipCode, addressId) {
+    this.addressLine = addressLine;
+    this.addressLine2 = addressLine2;
+    this.district = district;
     this.city = city;
-    this.state = state;
     this.zipCode = zipCode;
+    this.id = addressId;
   }
 
   create() {
-    return Pool.query('INSERT INTO address (num_place, street, unit, city, state, zip_code) VALUES (?, ?, ?, ?, ?, ?)',
-      [this.numPlace, this.street, this.unit, this.city, this.state, this.zipCode])
+    return Pool.query('INSERT INTO address (address_line, address_line2, district, city_id, zip_code) VALUES (?, ?, ?, ?, ?)',
+      [this.addressLine, this.addressLine2, this.district, this.city.id, this.zipCode])
         .then((results) => {
           return this.get('id', results.insertId);
         });
@@ -22,13 +22,18 @@ export class Address {
   get(column, param) {
     return Pool.query('SELECT * FROM address WHERE ' + column + ' = ?', [param])
       .then((results) => {
-        return new Address(results[0].id, results[0].num_place, results[0].street, results[0].unit, results[0].city, results[0].state, results[0].zip_code)
+        let city = new City().get('id', results[0].city_id)
+        return { results: results, city: city }
+      }).then(({ results: results, city: city }) => {
+        return city.then((city) => {
+          return new Address(results[0].address_line, results[0].address_line2, results[0].district, city, results[0].zip_code, results[0].id)
+        })
       });
   }
 
   update() {
-    return Pool.query('UPDATE address SET num_place = ?, street = ?, unit = ?, city = ?, state = ?, zip_code = ? WHERE id = ?',
-      [this.numPlace, this.street, this.unit, this.city, this.state, this.zipCode, this.id])
+    return Pool.query('UPDATE address SET address_line = ?, address_line2 = ?, district = ?, city_id = ?, zip_code = ? WHERE id = ?',
+      [this.addressLine, this.addressLine2, this.district, this.city.id, this.zipCode, this.id])
         .then((results) => {
           return this.get('id', this.id);
         });
