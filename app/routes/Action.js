@@ -14,12 +14,12 @@ router.post('/demand', (req, res) => {
   if(!costumerId || !placeId || !serviceTypeId || !dueDate || !details) {
     res.status(403).json({ message: "missing parameters" });
   } else {
+    //retrieves demand dependecies
     Promise.all([
       new Costumer().get('id', costumerId),
       new Place().get('id', placeId),
       new ServiceType().get('id', serviceTypeId)
     ]).then((results) => {
-      console.log(results[2])
       return new Demand(results[0], results[1], results[2], dueDate, details).create()
     }).then((demand) => {
       res.status(200).json(demand)
