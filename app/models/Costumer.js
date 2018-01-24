@@ -41,7 +41,7 @@ export class Costumer extends User {
   }
 
   remove() {
-    return Pool.query('DELETE FROM costumer WHERE email = ?', [this.email])
+    return Pool.query('DELETE FROM costumer WHERE id = ?', [this.id])
       .then((results) => {
         if(results.affectedRows == 1) {
           return true
