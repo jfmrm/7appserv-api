@@ -33,8 +33,8 @@ export class Costumer extends User {
 
 
   update() {
-    return Pool.query('UPDATE costumer SET email = ?, first_name = ?, last_name = ?, password = ?, cell_phone = ? WHERE email = ?',
-    [this.email, this.firstName, this.lastName, this.password, this.contactNumber, this.email])
+    return Pool.query('UPDATE costumer SET email = ?, first_name = ?, last_name = ?, cell_phone = ? WHERE email = ?',
+    [this.email, this.firstName, this.lastName, this.contactNumber, this.email])
       .then((results) => {
         return this.get('email', this.email)
       });
