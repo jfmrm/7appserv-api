@@ -62,4 +62,20 @@ router.delete('/', (req, res) => {
   }
 });
 
+//get costumer
+router.get('/', (req, res) => {
+  let costumerId = req.query.costumerId;
+
+  if(!costumerId) {
+    res.status(400).json({ message: 'missing parameters' });
+  } else {
+    new Costumer().get('id', costumerId)
+      .then((costumer) => {
+        res.status(200).json(costumer)
+      }).catch((error) => {
+        res.status(500).json(error)
+      });
+  }
+});
+
 export const CostumerRouter = router;

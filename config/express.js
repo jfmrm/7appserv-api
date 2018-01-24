@@ -13,8 +13,8 @@ app.use(morgan('dev'));
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json());
 
-app.use('/api/costumers/user', CostumerRouter);
-app.use('/api/pros/user', ProRouter);
+app.use('/api/costumers/users', CostumerRouter);
+app.use('/api/pros/users', ProRouter);
 app.use('/api/costumers', CostumerActionsRouter);
 
 export const App = app;
