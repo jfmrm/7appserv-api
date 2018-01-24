@@ -53,7 +53,7 @@ router.post('/pro', (req, res) => {
 //from here needs authentication
 //edit Costumer
 //this method doesn't edit the email and the password, theese will have its own methods
-router.post('/costumer/edit', (req, res) => {
+router.put('/costumer', (req, res) => {
   let firstName = req.body.firstName;
   let lastName = req.body.lastName;
   let email = req.body.email;
@@ -72,7 +72,7 @@ router.post('/costumer/edit', (req, res) => {
 });
 
 //edit Pro
-router.post('/pro/edit', (req, res) => {
+router.put('/pro', (req, res) => {
   let firstName = req.body.firstName;
   let lastName = req.body.lastName;
   let email = req.body.email;

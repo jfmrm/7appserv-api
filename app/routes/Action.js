@@ -31,7 +31,7 @@ router.post('/demand', (req, res) => {
 });
 
 //edit demand
-router.post('/demand/edit', (req, res) => {
+router.put('/demand', (req, res) => {
   let demandId = req.body.demandId;
   let placeId = req.body.placeId;
   let serviceTypeId = req.body.serviceTypeId;
@@ -56,4 +56,6 @@ router.post('/demand/edit', (req, res) => {
   }
 });
 
+//delete demand
+router.post('')
 export const ActionRouter = router;
