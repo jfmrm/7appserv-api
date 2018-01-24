@@ -71,6 +71,7 @@ router.post('/costumer/edit', (req, res) => {
   }
 });
 
+//edit Pro
 router.post('/pro/edit', (req, res) => {
   let firstName = req.body.firstName;
   let lastName = req.body.lastName;
@@ -96,7 +97,6 @@ router.post('/pro/edit', (req, res) => {
       }).then((pro) => {
         res.status(200).json(pro)
       }).catch((error) => {
-        console.log(error)
         res.status(500).json(error)
       });
   }
