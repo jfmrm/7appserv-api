@@ -71,4 +71,35 @@ router.post('/costumer/edit', (req, res) => {
   }
 });
 
+router.post('/pro/edit', (req, res) => {
+  let firstName = req.body.firstName;
+  let lastName = req.body.lastName;
+  let email = req.body.email;
+  let contactNumber = req.body.contactNumber;
+  let address = req.body.address;
+  let hasInsurance = req.body.hasInsurance;
+
+  if(!firstName || !lastName || !email || !contactNumber || !address || !hasInsurance) {
+    res.status(403).json({ message: 'missing parameters' });
+  } else {
+    new Pro().get('email', email)
+      .then((pro) => {
+        return new Address(address.addressLine, address.addressLine2, address.district, null, address.zipCode, pro.address.id)
+      }).then((newAddress) => {
+        return new City().get('id', address.cityId)
+          .then((city) => {
+            newAddress.city = city
+            return newAddress
+          })
+      }).then((address) => {
+        return new Pro(firstName, lastName, email, null, contactNumber, address, hasInsurance).update()
+      }).then((pro) => {
+        res.status(200).json(pro)
+      }).catch((error) => {
+        console.log(error)
+        res.status(500).json(error)
+      });
+  }
+});
+
 export const UserRouter = router;
