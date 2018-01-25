@@ -60,7 +60,6 @@ router.put('/', (req, res) => {
   }
 });
 
-//delete costumer
 //delete Pro
 router.delete('/', (req, res) => {
   let proId = req.query.proId;
@@ -77,6 +76,22 @@ router.delete('/', (req, res) => {
         res.status(500).json(error)
       });
   }
-})
+});
+
+//get pro
+router.get('/', (req, res) => {
+  let proId = req.query.proId;
+
+  if(!proId) {
+    res.status(400).json({ message: 'missing parameters' });
+  } else {
+    new Pro().get('id', proId)
+      .then((pro) => {
+        res.status(200).json(pro)
+      }).catch((error) => {
+        res.status(500).json(error)
+      });
+  }
+});
 
 export const ProRouter = router;

@@ -5,7 +5,7 @@ let router = Router();
 
 //needs authentication
 //Create new Demand
-router.post('/demand', (req, res) => {
+router.post('/demands', (req, res) => {
   let costumerId = req.body.costumerId;
   let placeId = req.body.placeId;
   let serviceTypeId = req.body.serviceTypeId;
@@ -31,7 +31,7 @@ router.post('/demand', (req, res) => {
 });
 
 //edit demand
-router.put('/demand', (req, res) => {
+router.put('/demands', (req, res) => {
   let demandId = req.body.demandId;
   let placeId = req.body.placeId;
   let serviceTypeId = req.body.serviceTypeId;
@@ -57,17 +57,33 @@ router.put('/demand', (req, res) => {
 });
 
 //delete demand
-router.delete('/demand', (req, res) => {
+router.delete('/demands', (req, res) => {
   let demandId = req.query.demandId;
 
   if(!demandId) {
     res.status(400).json({ message: 'missing parameters' });
   } else {
-    let demand = new Demand()
+    let demand = new Demand();
     demand.id = demandId
     demand.remove()
       .then((deleted) => {
         if (deleted) res.status(200).json({ message: 'demand successfully deleted' })
+      }).catch((error) => {
+        res.status(500).json(error)
+      });
+  }
+});
+
+//get demand
+router.get('/demands', (req, res) => {
+  let demandId = req.query.demandId;
+
+  if(!demandId) {
+    res.status(400).json({ message: 'missing parameters' });
+  } else {
+    new Demand().get('id', demandId)
+      .then((demand) => {
+        res.status(200).json(demand)
       }).catch((error) => {
         res.status(500).json(error)
       });
