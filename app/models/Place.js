@@ -37,7 +37,7 @@ export class Place {
   }
 
   update() {
-    return Pool.query('UPDATE place SET size = ?, bathrooms = ?', [this.size, this.bathrooms])
+    return Pool.query('UPDATE place SET size = ?, bathrooms = ? WHERE id = ?', [this.size, this.bathrooms, this.id])
       .then(() => {
         return this.get('id', this.id)
       });
