@@ -44,19 +44,19 @@ export class Place {
   }
 
   remove() {
-    return this.address.remove()
-      .then((res) => {
-        if (!res) {
-          throw new Error('could not remove this places address')
-        } else {
+    return this.get('id', this.id)
+      .then((place) => {
+        place.address.remove()
+      }).then((res) => {
           return Pool.query('DELETE FROM place WHERE id = ?', [this.id])
-        }
       }).then((results) => {
         if(results.affectedRows == 1) {
           return true
         } else {
-          return new Error('does not exist')
+          return new Error('Place does not exist')
         }
+      }).catch((error) => {
+        throw error
       });
   }
 

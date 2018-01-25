@@ -28,6 +28,8 @@ export class Address {
         return city.then((city) => {
           return new Address(results[0].address_line, results[0].address_line2, results[0].district, city, results[0].zip_code, results[0].id)
         })
+      }).catch((error) => {
+        throw new Error('This address does not exists')
       });
   }
 
@@ -42,10 +44,11 @@ export class Address {
   remove() {
     return Pool.query('DELETE FROM address WHERE id = ?', [this.id])
       .then((results) => {
+        console.log(results)
         if(results.affectedRows == 1) {
           return true
         } else {
-          return new Error('Address does not exist')
+          throw new Error('Address does not exist')
         }
       });
   }
