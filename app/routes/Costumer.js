@@ -1,4 +1,4 @@
-import { Costumer, Pro, ProVIP, Address, City } from '../models';
+import { Costumer, Address, City, Place } from '../models';
 import { Router } from 'express';
 
 let router = Router();
@@ -73,6 +73,33 @@ router.get('/', (req, res) => {
       .then((costumer) => {
         res.status(200).json(costumer)
       }).catch((error) => {
+        console.log(error)
+        res.status(500).json(error)
+      });
+  }
+});
+
+//Place stuff
+//crate Place
+router.post('/places', (req, res) => {
+  let costumerId = req.body.costumerId;
+  let size = req.body.size;
+  let bathrooms = req.body.bathrooms;
+  let address = req.body.address
+
+  if(!costumerId || !size || !bathrooms || !address) {
+    res.status(400).json({ message: "missing parameters" });
+  } else {
+    new City().get('id', address.cityId)
+      .then((city) => {
+        return new Address(address.addressLine, address.addressLine2, address.district, city, address.zipCode, address.id)
+          .create()
+      }).then((address) => {
+        return new Place(costumerId, size, bathrooms, address).create()
+      }).then((place) => {
+        res.status(201).json(place)
+      }).catch((error) => {
+        console.log(error)
         res.status(500).json(error)
       });
   }
