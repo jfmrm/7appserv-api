@@ -20,6 +20,8 @@ export class Pro extends User {
           [this.email, this.password, this.firstName, this.lastName, this.avarageResponseTime, this.rate, this.lastPayment, 'Standard', this.hasInsurance, this.contactNumber, address.id])
       }).then((results) => {
         return this.get('id', results.insertId)
+      }).catch((error) => {
+        throw error
       });
   }
 
@@ -42,6 +44,8 @@ export class Pro extends User {
     return Promise.all([pro, address])
       .then((result) => {
         return this.get('email', this.email)
+      }).catch((error) => {
+        throw error
       });
   }
 
@@ -53,6 +57,8 @@ export class Pro extends User {
         } else {
           return new Error('demand does not exist')
         }
+      }).catch((error) => {
+        throw error
       });
   }
 }

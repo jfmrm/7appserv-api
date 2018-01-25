@@ -11,6 +11,8 @@ export class ServiceType {
     [this.type])
       .then((results) => {
         return this.get('id', results.insertId)
+      }).catch((error) => {
+        throw error
       });
   }
 
@@ -18,6 +20,8 @@ export class ServiceType {
     return Pool.query('SELECT * FROM service_type WHERE ' + column + ' = ?', [param])
       .then((results) => {
         return new ServiceType(results[0].id, results[0].type)
+      }).catch((error) => {
+        throw error
       });
   }
 
@@ -25,6 +29,8 @@ export class ServiceType {
     return Pool.query('UPDATE service_type SET type = ? WHERE id = ?', [this.id])
       .then((results) => {
         return this.get('id', this.id)
+      }).catch((error) => {
+        throw error
       });
   }
 
@@ -36,6 +42,8 @@ export class ServiceType {
         } else {
           return new Error('Service type does not exist')
         }
+      }).catch((error) => {
+        throw error
       });
   }
 }

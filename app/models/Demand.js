@@ -18,6 +18,8 @@ export class Demand {
     [this.costumer.id, this.place.id, this.serviceType.id, this.dueDate, this.details])
       .then((results) => {
         return this.get('id', results.insertId)
+      }).catch((error) => {
+        throw error
       });
   }
 
@@ -37,6 +39,8 @@ export class Demand {
             demand.serviceType = serviceType
             return demand
           })
+      }).catch((error) => {
+        throw error
       });
   }
 
@@ -45,6 +49,8 @@ export class Demand {
     [this.place.id, this.serviceType.id, this.dueDate, this.details, this.id])
       .then((restuls) => {
         return this.get('id', this.id)
+      }).catch((error) => {
+        throw error
       });
   }
 
@@ -56,6 +62,8 @@ export class Demand {
         } else {
           return new Error('Demand does not exist')
         }
+      }).catch((error) => {
+        throw error
       });
   }
 }

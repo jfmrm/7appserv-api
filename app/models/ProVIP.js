@@ -18,6 +18,8 @@ export class ProVIP extends Pro {
           .then((pro) => {
             return this.get('id', this.id)
           })
+      }).catch((error) => {
+        throw error
       });
   }
 
@@ -30,6 +32,8 @@ export class ProVIP extends Pro {
         return results.then((res) => {
           return new ProVIP(pro, res[0].ein, res[0].company_name, res[0].licenseNumber)
         })
+      }).catch((error) => {
+        throw error
       });
   }
 
@@ -40,6 +44,8 @@ export class ProVIP extends Pro {
         return super.update()
       }).then((pro) => {
         return this.get('id', this.id)
+      }).catch((error) => {
+        throw error
       });
   }
 
@@ -51,6 +57,8 @@ export class ProVIP extends Pro {
         } else {
           return new Error('Pro VIP does not exist')
         }
+      }).catch((error) => {
+        throw error
       });
   }
 

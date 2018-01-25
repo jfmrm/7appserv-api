@@ -21,7 +21,7 @@ export class Place {
           return this.get('id', results.insertId)
         })
       }).catch((error) => {
-        throw new Error('This place does not exist')
+        throw error
       });
   }
 
@@ -44,6 +44,8 @@ export class Place {
     return Pool.query('UPDATE place SET size = ?, bathrooms = ? WHERE id = ?', [this.size, this.bathrooms, this.id])
       .then(() => {
         return this.get('id', this.id)
+      }).catch((error) => {
+        throw error
       });
   }
 
@@ -73,6 +75,8 @@ export class Place {
         }))
       }).then((places) => {
         return places
+      }).catch((error) => {
+        throw error
       });
   }
 }

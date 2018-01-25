@@ -10,6 +10,8 @@ export class City {
     return Pool.query('INSERT INTO city (name) VALUES (?)', [this.name])
       .then((results) => {
         return this.get('id', results.insertId)
+      }).catch((error) => {
+        throw error
       });
   }
 
@@ -17,6 +19,8 @@ export class City {
     return Pool.query('SELECT * FROM city WHERE ' + column + ' = ?', [param])
       .then((results) => {
         return new City(results[0].name, results[0].id)
+      }).catch((error) => {
+        throw error
       });
   }
 
@@ -24,6 +28,8 @@ export class City {
     return Pool.query('UPDATE city SET name = ? WHERE id = ?', [this.name ,this.id])
       .then((results) => {
         return this.get('id', this.id)
+      }).catch((error) => {
+        throw error
       });
   }
 
@@ -35,6 +41,8 @@ export class City {
         } else {
           return new Error('City does not exist')
         }
+      }).catch((error) => {
+        throw error
       });
   }
 }

@@ -13,6 +13,8 @@ export class Costumer extends User {
     [this.email, this.firstName, this.lastName, this.password, this.contactNumber])
       .then((results) => {
         return this.get('id', results.insertId)
+      }).catch((error) => {
+        throw error
       });
   }
 
@@ -28,6 +30,8 @@ export class Costumer extends User {
       }).then(({ places: places, costumer: costumer }) => {
         costumer.places = places;
         return costumer;
+      }).catch((error) => {
+        throw error
       });
   }
 
@@ -37,6 +41,8 @@ export class Costumer extends User {
     [this.email, this.firstName, this.lastName, this.contactNumber, this.email])
       .then((results) => {
         return this.get('email', this.email)
+      }).catch((error) => {
+        throw error
       });
   }
 
@@ -48,6 +54,8 @@ export class Costumer extends User {
         } else {
           return new Error('Costumer does not exist')
         }
+      }).catch((error) => {
+        throw error
       });
   }
 }

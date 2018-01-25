@@ -16,6 +16,8 @@ export class Address {
       [this.addressLine, this.addressLine2, this.district, this.city.id, this.zipCode])
         .then((results) => {
           return this.get('id', results.insertId);
+        }).catch((error) => {
+          throw new Error(error.message)
         });
   }
 
@@ -38,6 +40,8 @@ export class Address {
       [this.addressLine, this.addressLine2, this.district, this.city.id, this.zipCode, this.id])
         .then((results) => {
           return this.get('id', this.id);
+        }).catch((error) => {
+          throw new Error(error.message)
         });
   }
 
