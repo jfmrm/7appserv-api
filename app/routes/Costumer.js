@@ -129,4 +129,24 @@ router.put('/places', (req, res) => {
   }
 });
 
+router.delete('/places', (req, res) => {
+  let placeId = req.query.placeId;
+
+  if(!placeId) {
+    res.status(400).json({ message: 'missing parameters' })
+  } else {
+    let place = new Place();
+    place.id = placeId;
+    place.remove()
+      .then((deleted) => {
+        if(deleted) {
+          res.status(200).json({ message: 'Place successfully deleted' })
+        } 
+      }).catch((error) => {
+        console.log(error)
+        res.status(500).json({message: 'Place does not exists, or is corrupted'})
+      });
+  }
+});
+
 export const CostumerRouter = router;
