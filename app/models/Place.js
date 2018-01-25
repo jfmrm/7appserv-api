@@ -20,6 +20,8 @@ export class Place {
         return results.then((results) => {
           return this.get('id', results.insertId)
         })
+      }).catch((error) => {
+        throw new Error('This place does not exist')
       });
   }
 
@@ -33,6 +35,8 @@ export class Place {
             place.address = address
             return place
           })
+      }).catch(() => {
+        throw new Error('This place does not exist')
       });
   }
 
