@@ -105,4 +105,28 @@ router.post('/places', (req, res) => {
   }
 });
 
+router.put('/places', (req, res) => {
+  let costumerId = req.body.costumerId;
+  let placeId = req.body.placeId;
+  let size = req.body.size;
+  let bathrooms = req.body.bathrooms;
+  let address = req.body.address;
+
+  if(!size || !bathrooms || !address || !costumerId || !placeId) {
+    res.status(400).json({ message: "missing parameters" })
+  } else {
+    new City().get('id', address.cityId)
+      .then((city) => {
+        return new Address(address.addressLine, address.addressLine2, address.district, city, address.zipCode, address.addressId).update()
+      }).then((address) => {
+        return new Place(costumerId, size, bathrooms, address, placeId).update()
+      }).then((place) => {
+        res.status(200).json(place)
+      }).catch((error) => {
+        console.log(error)
+        res.status(500).json(error)
+      });
+  }
+});
+
 export const CostumerRouter = router;
