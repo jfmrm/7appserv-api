@@ -21,7 +21,7 @@ export class Pro extends User {
       }).then((results) => {
         return this.get('id', results.insertId)
       }).catch((error) => {
-        throw error
+        throw new Error('This e-mail is already registered')
       });
   }
 

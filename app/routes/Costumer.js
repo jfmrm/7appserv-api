@@ -18,7 +18,7 @@ router.post('/', (req, res) => {
       .then((costumer) => {
         res.status(201).json(costumer)
       }).catch((error) => {
-        res.status(500).json(error)
+        res.status(500).json({ message: error.message })
       });
   }
 });
@@ -74,7 +74,7 @@ router.get('/', (req, res) => {
         res.status(200).json(costumer)
       }).catch((error) => {
         console.log(error)
-        res.status(500).json(error)
+        res.status(500).json({ message: error.message })
       });
   }
 });
@@ -124,7 +124,7 @@ router.put('/places', (req, res) => {
         res.status(200).json(place)
       }).catch((error) => {
         console.log(error)
-        res.status(500).json(error)
+        res.status(500).json({ message: error.message })
       });
   }
 });

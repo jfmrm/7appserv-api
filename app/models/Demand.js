@@ -40,7 +40,7 @@ export class Demand {
             return demand
           })
       }).catch((error) => {
-        throw error
+        throw new Error('This demand does not exists, or has been deleted')
       });
   }
 

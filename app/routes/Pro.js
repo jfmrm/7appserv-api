@@ -23,7 +23,7 @@ router.post('/', (req, res) => {
       }).then((pro) => {
         res.status(201).json(pro)
       }).catch((error) => {
-        res.status(500).json(error)
+        res.status(500).json({ message: error.message })
       });
   }
 });

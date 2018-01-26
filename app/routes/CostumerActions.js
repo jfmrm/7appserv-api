@@ -85,7 +85,7 @@ router.get('/demands', (req, res) => {
       .then((demand) => {
         res.status(200).json(demand)
       }).catch((error) => {
-        res.status(500).json(error)
+        res.status(500).json({ message: error.message })
       });
   }
 });
