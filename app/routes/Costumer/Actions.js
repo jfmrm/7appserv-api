@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { Demand, Service, Costumer, Place, ServiceType } from  '../models';
+import { Demand, Service, Costumer, Place, ServiceType } from  '../../models';
 
 let router = Router();
 

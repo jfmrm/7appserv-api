@@ -1,4 +1,4 @@
-import { Costumer, Address, City, Place } from '../models';
+import { Costumer, Address, City, Place } from '../../models';
 import { Router } from 'express';
 
 let router = Router();
@@ -163,4 +163,4 @@ router.get('/places', (req, res) => {
   }
 });
 
-export const CostumerRouter = router;
+export const CostumerUserRouter = router;
