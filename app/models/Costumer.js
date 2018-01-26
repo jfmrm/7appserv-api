@@ -52,7 +52,7 @@ export class Costumer extends User {
         if(results.affectedRows == 1) {
           return true
         } else {
-          return new Error('Costumer does not exist')
+          throw new Error('Costumer does not exist')
         }
       }).catch((error) => {
         throw error

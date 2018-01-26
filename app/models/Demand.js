@@ -57,10 +57,11 @@ export class Demand {
   remove() {
     return Pool.query('DELETE FROM demand WHERE id = ?', [this.id])
       .then((res) => {
+        console.log(res)
         if (res.affectedRows == 1) {
           return true
         } else {
-          return new Error('Demand does not exist')
+          throw new Error('Demand does not exist')
         }
       }).catch((error) => {
         throw error

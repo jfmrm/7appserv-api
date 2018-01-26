@@ -39,7 +39,7 @@ export class City {
         if (results.affectedRows == 1) {
           return true
         } else {
-          return new Error('City does not exist')
+          throw new Error('City does not exist')
         }
       }).catch((error) => {
         throw error

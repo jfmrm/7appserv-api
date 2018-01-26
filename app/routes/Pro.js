@@ -55,7 +55,7 @@ router.put('/', (req, res) => {
       }).then((pro) => {
         res.status(200).json(pro)
       }).catch((error) => {
-        res.status(500).json(error)
+        res.status(500).json({ message: error.message })
       });
   }
 });
@@ -73,7 +73,7 @@ router.delete('/', (req, res) => {
       .then((deleted) => {
         res.status(200).json({ message: "pro deleted successfully" })
       }).catch((error) => {
-        res.status(500).json(error)
+        res.status(500).json({ message: error.message })
       });
   }
 });

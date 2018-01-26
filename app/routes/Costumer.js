@@ -39,7 +39,7 @@ router.put('/', (req, res) => {
       .then((costumer) => {
         res.status(200).json(costumer)
       }).catch((error) => {
-        res.status(500).json(error)
+        res.status(500).json({ message: error.message })
       });
   }
 });
@@ -56,8 +56,7 @@ router.delete('/', (req, res) => {
       .then((deleted) => {
         if (deleted) res.status(200).json({ message: "Costumer successfully deleted" })
       }).catch((error) => {
-        console.log(error)
-        res.status(500).json(error)
+        res.status(500).json({ messate: error.message })
       });
   }
 });
@@ -100,7 +99,7 @@ router.post('/places', (req, res) => {
         res.status(201).json(place)
       }).catch((error) => {
         console.log(error)
-        res.status(500).json(error)
+        res.status(500).json({ message: error.message })
       });
   }
 });

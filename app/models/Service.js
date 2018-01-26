@@ -49,7 +49,7 @@ export class Service extends Demand {
         if (res.affectedRows == 1) {
           return true
         } else {
-          return new Error('Service does not exist')
+          throw new Error('Service does not exist')
         }
       }).catch((error) => {
         throw error

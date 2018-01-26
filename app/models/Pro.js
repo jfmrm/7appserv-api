@@ -57,7 +57,7 @@ export class Pro extends User {
         if (result.affectedRows == 1) {
           return true
         } else {
-          return new Error('demand does not exist')
+          throw new Error('Pro does not exist')
         }
       }).catch((error) => {
         throw error

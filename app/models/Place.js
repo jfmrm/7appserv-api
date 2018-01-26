@@ -59,7 +59,7 @@ export class Place {
         if(results.affectedRows == 1) {
           return true
         } else {
-          return new Error('Place does not exist')
+          throw new Error('Place does not exist')
         }
       }).catch((error) => {
         throw error

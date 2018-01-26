@@ -40,7 +40,7 @@ export class ServiceType {
         if(res.affectedRows == 1) {
           return true
         } else {
-          return new Error('Service type does not exist')
+          throw new Error('Service type does not exist')
         }
       }).catch((error) => {
         throw error

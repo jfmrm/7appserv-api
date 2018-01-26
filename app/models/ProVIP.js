@@ -55,7 +55,7 @@ export class ProVIP extends Pro {
         if(result.affectedRows == 1) {
           return true
         } else {
-          return new Error('Pro VIP does not exist')
+          throw new Error('Pro VIP does not exist')
         }
       }).catch((error) => {
         throw error
