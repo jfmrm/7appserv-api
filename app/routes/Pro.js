@@ -89,7 +89,7 @@ router.get('/', (req, res) => {
       .then((pro) => {
         res.status(200).json(pro)
       }).catch((error) => {
-        res.status(500).json(error)
+        res.status(500).json({ message: error.message })
       });
   }
 });

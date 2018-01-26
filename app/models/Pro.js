@@ -34,6 +34,8 @@ export class Pro extends User {
         return address.then((address) => {
           return new Pro(results[0].first_name, results[0].last_name, results[0].email, results[0].password, results[0].contact_number, address, results[0].has_insurance, results[0].average_response_time, results[0].rate, results[0].last_payment_date, results[0].id)
         })
+      }).catch((error) => {
+        throw new Error('Pro could not be found')
       });
   }
 
