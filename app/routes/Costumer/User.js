@@ -84,17 +84,15 @@ router.post('/places', (req, res) => {
   let costumerId = req.body.costumerId;
   let size = req.body.size;
   let bathrooms = req.body.bathrooms;
-  let address = req.body.address
+  let address = req.body.address;
 
   if(!costumerId || !size || !bathrooms || !address) {
     res.status(400).json({ message: "missing parameters" });
   } else {
     new City().get('id', address.cityId)
       .then((city) => {
-        return new Address(address.addressLine, address.addressLine2, address.district, city, address.zipCode, address.id)
-          .create()
-      }).then((address) => {
-        return new Place(costumerId, size, bathrooms, address).create()
+        let addr = new Address(address.addressLine, address.addressLine2, address.district, city, address.zipCode, address.latitude, address.longitude, address.id)
+        return new Place(costumerId, size, bathrooms, addr).create()
       }).then((place) => {
         res.status(201).json(place)
       }).catch((error) => {
@@ -116,7 +114,7 @@ router.put('/places', (req, res) => {
   } else {
     new City().get('id', address.cityId)
       .then((city) => {
-        return new Address(address.addressLine, address.addressLine2, address.district, city, address.zipCode, address.addressId).update()
+        return new Address(address.addressLine, address.addressLine2, address.district, city, address.zipCode, address.latitude, address.longitude, address.addressId).update()
       }).then((address) => {
         return new Place(costumerId, size, bathrooms, address, placeId).update()
       }).then((place) => {

@@ -11,14 +11,15 @@ router.post('/', (req, res) => {
   let contactNumber = req.body.contactNumber;
   let address = req.body.address;
   let hasInsurance = req.body.hasInsurance;
+  let actionRadious = req.body.actionRadious;
 
-  if (!firstName || !lastName || !email || !password || !contactNumber || !address || !hasInsurance) {
+  if (!firstName || !lastName || !email || !password || !contactNumber || !address || !hasInsurance || !actionRadious) {
     res.status(400).json({ message: 'missing parameters' });
   } else {
     new City().get('id', address.cityId)
       .then((city) => {
-        address = new Address(address.addressLine, address.addressLine2, address.district, city, address.zipCode)
-        let pro = new Pro(firstName, lastName, email, password, contactNumber, address, hasInsurance);
+        let addr = new Address(address.addressLine, address.addressLine2, address.district, city, address.zipCode, address.latitude, address.longitude)
+        let pro = new Pro(firstName, lastName, email, password, contactNumber, addr, hasInsurance, actionRadious);
         return pro.create()
       }).then((pro) => {
         res.status(201).json(pro)
@@ -37,13 +38,14 @@ router.put('/', (req, res) => {
   let contactNumber = req.body.contactNumber;
   let address = req.body.address;
   let hasInsurance = req.body.hasInsurance;
+  let actionRadious = req.body.actionRadious;
 
-  if(!firstName || !lastName || !email || !contactNumber || !address || !hasInsurance) {
+  if(!firstName || !lastName || !email || !contactNumber || !address || !hasInsurance || !actionRadious) {
     res.status(400).json({ message: 'missing parameters' });
   } else {
     new Pro().get('email', email)
       .then((pro) => {
-        return new Address(address.addressLine, address.addressLine2, address.district, null, address.zipCode, pro.address.id)
+        return new Address(address.addressLine, address.addressLine2, address.district, null, address.zipCode, address.latitude, address.longitude, pro.address.id)
       }).then((newAddress) => {
         return new City().get('id', address.cityId)
           .then((city) => {
@@ -51,7 +53,7 @@ router.put('/', (req, res) => {
             return newAddress
           })
       }).then((address) => {
-        return new Pro(firstName, lastName, email, null, contactNumber, address, hasInsurance).update()
+        return new Pro(firstName, lastName, email, null, contactNumber, address, hasInsurance, actionRadious).update()
       }).then((pro) => {
         res.status(200).json(pro)
       }).catch((error) => {
