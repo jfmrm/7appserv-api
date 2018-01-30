@@ -11,8 +11,9 @@ router.post('/demands', (req, res) => {
   let serviceTypeId = req.body.serviceTypeId;
   let dueDate = req.body.dueDate;
   let details = req.body.details;
+  let isPublic = req.body.isPublic;
 
-  if(!costumerId || !placeId || !serviceTypeId || !dueDate || !details) {
+  if(!costumerId || !placeId || !serviceTypeId || !dueDate || !details || !isPublic) {
     res.status(400).json({ message: "missing parameters" });
   } else {
     //retrieves demand dependecies
@@ -21,7 +22,7 @@ router.post('/demands', (req, res) => {
       new Place().get('id', placeId),
       new ServiceType().get('id', serviceTypeId)
     ]).then((results) => {
-      return new Demand(results[0], results[1], results[2], dueDate, details).create()
+      return new Demand(results[0], results[1], results[2], dueDate, details, isPublic).create()
     }).then((demand) => {
       res.status(201).json(demand)
     }).catch((error) => {
@@ -46,7 +47,7 @@ router.put('/demands', (req, res) => {
       new Place().get('id', placeId),
       new ServiceType().get('id', serviceTypeId)
     ]).then((res) => {
-      return new Demand(null, res[0], res[1], dueDate, details, null, null,demandId).update()
+      return new Demand(null, res[0], res[1], dueDate, details, null, null, null, null, demandId).update()
     }).then((demand) => {
       res.status(200).json(demand)
     }).catch((error) => {

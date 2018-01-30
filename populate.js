@@ -97,29 +97,37 @@ export function populate () {
 
 // ----------------------------------------------------------------------------------------
 //Demand stuff
+  // let city = new City('Tucson');
   // let serviceType = new ServiceType(null, 'house cleaning');
   // let costumer = new Costumer('joao', 'moura', 'joao@filipe.com', '123', '+1123456789');
-  // let address = new Address(null, 20, 'street', 'unit', 'city', 'st', 12345);
+  // let address = new Address('addressLine', 'addressLine2', 'az', city, 12345, 10, 10);
   // let place = new Place(1, 1, 2, address);
+  // let dueDate = [];
+  // for (let i = 0; i < 10; i++) {
+  //   dueDate.push([moment(Date.now()).format('YYYY-MM-DD HH:mm:ss'), moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')])
+  // }
   //
-  // Promise.all([serviceType.create(), costumer.create(), place.create()])
-  //   .then((dependencies) => {
-  //     console.log(dependencies)
-  //     let demand = new Demand(null, dependencies[1], dependencies[2], dependencies[0], moment(Date.now()).format('YYYY-MM-DD HH:mm:ss'), 'details', true).create()
-  //     return { demand: demand, dependencies: dependencies }
-  //   }).then(({ demand: demand, dependencies: dependencies }) => {
-  //     demand.then((demand) => {
-  //       console.log(demand)
-  //       return Promise.all(
-  //         [dependencies[0].remove(),
-  //          dependencies[1].remove(),
-  //          dependencies[2].remove(),
-  //          demand.remove()])
-  //     }).then((res) => {
-  //       console.log(res)
-  //     })
-  //   });
-
+  // city.create()
+  //   .then((city) => {
+  //     address.city = city
+  //     return Promise.all([
+  //       place.create(),
+  //       costumer.create(),
+  //       serviceType.create(),
+  //     ])
+  //   }).then((res) => {
+  //     return new Demand(res[1], res[0], res[2], dueDate, 'details', true).create()
+  //   }).then((demand) => {
+  //     console.log(demand)
+  //     return Promise.all([
+  //       demand.place.remove(),
+  //       demand.costumer.remove(),
+  //       demand.serviceType.remove(),
+  //       demand.remove()
+  //     ])
+  //   }).then((removed) => {
+  //     console.log(removed)
+  //   })
 
 //-------------------------------------------------------------------------------------
 //Service stuff
