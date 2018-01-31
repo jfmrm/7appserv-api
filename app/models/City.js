@@ -20,7 +20,7 @@ export class City {
       .then((results) => {
         return new City(results[0].name, results[0].id)
       }).catch((error) => {
-        throw error
+        throw new Error('City does not exists')
       });
   }
 
