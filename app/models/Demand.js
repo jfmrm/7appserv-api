@@ -1,5 +1,5 @@
 import { Pool } from '../../config';
-import { Costumer, Place, ServiceType, Pro } from './';
+import { Costumer, Place, ServiceType, Pro, ProVIP } from './';
 
 export class Demand {
   constructor(costumer, place, serviceType, dueDate, details, isPublic, pro, isOpen, lastModified, demandId) {
@@ -18,8 +18,8 @@ export class Demand {
 
   create() {
     console.log(this.dueDate)
-    return Pool.query('INSERT INTO demand (costumer_id, place_id, service_type_id, details, is_public) VALUES (?, ?, ?, ?, ?)',
-    [this.costumer.id, this.place.id, this.serviceType.id, this.details, this.isPublic])
+    return Pool.query('INSERT INTO demand (costumer_id, place_id, service_type_id, details, is_public, pro_id) VALUES (?, ?, ?, ?, ?, ?)',
+    [this.costumer.id, this.place.id, this.serviceType.id, this.details, this.isPublic, this.pro])
       .then((results) => {
         return Promise.all(this.dueDate.map((dueDate) => {
           Pool.query('INSERT INTO demand_due_date (demand_id, start, end) VALUES (?, ?, ?)', [results.insertId, dueDate[0], dueDate[1]])
@@ -36,18 +36,35 @@ export class Demand {
       .then((results) => {
         return new Demand(results[0].costumer_id, results[0].place_id, results[0].service_type_id, null, results[0].details, results[0].is_public, results[0].pro_id, results[0].is_open, results[0].last_modified, results[0].id)
       }).then((demand) => {
-        return Promise.all([
-          new Costumer().get('id', demand.costumer),
-          new Place().get('id', demand.place),
-          new ServiceType().get('id', demand.serviceType),
-          demand.getDueDateList()
-        ]).then((res) => {
-          demand.costumer = res[0]
-          demand.place = res[1]
-          demand.serviceType = res[2]
-          demand.dueDate = res[3]
-          return demand
-        })
+        if(demand.isPublic) { //if demand is public it wont try to get a pro
+          return Promise.all([
+            new Costumer().get('id', demand.costumer),
+            new Place().get('id', demand.place),
+            new ServiceType().get('id', demand.serviceType),
+            demand.getDueDateList()
+          ]).then((res) => {
+            demand.costumer = res[0]
+            demand.place = res[1]
+            demand.serviceType = res[2]
+            demand.dueDate = res[3]
+            return demand
+          })
+        } else { //if the demand is private it will try to get its pro
+          return Promise.all([
+            new Costumer().get('id', demand.costumer),
+            new Place().get('id', demand.place),
+            new ServiceType().get('id', demand.serviceType),
+            demand.getDueDateList(),
+            new ProVIP().get('pro_id', demand.pro)
+          ]).then((res) => {
+            demand.costumer = res[0]
+            demand.place = res[1]
+            demand.serviceType = res[2]
+            demand.dueDate = res[3]
+            demand.pro = res[4]
+            return demand
+          })
+        }
       }).then((demand) => {
         return demand
       }).catch((error) => {

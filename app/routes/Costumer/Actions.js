@@ -1,19 +1,19 @@
 import { Router } from 'express';
-import { Demand, Service, Costumer, Place, ServiceType } from  '../../models';
+import { Demand, Service, Costumer, Place, ServiceType, ProVIP } from  '../../models';
 
 let router = Router();
 
 //needs authentication
-//Create new Demand
-router.post('/demands', (req, res) => {
+//Create new Demand to be posted to all pros in the area
+router.post('/demands/public', (req, res) => {
   let costumerId = req.body.costumerId;
   let placeId = req.body.placeId;
   let serviceTypeId = req.body.serviceTypeId;
   let dueDate = req.body.dueDate;
   let details = req.body.details;
-  let isPublic = req.body.isPublic;
+  let isPublic = true;
 
-  if(!costumerId || !placeId || !serviceTypeId || !dueDate || !details || !isPublic) {
+  if(!costumerId || !placeId || !serviceTypeId || !dueDate || !details) {
     res.status(400).json({ message: "missing parameters" });
   } else {
     //retrieves demand dependecies
@@ -28,6 +28,33 @@ router.post('/demands', (req, res) => {
     }).catch((error) => {
       res.status(500).json({ message: error.message })
     });
+  }
+});
+
+router.post('/demands/private', (req, res) => {
+  let costumerId = req.body.costumerId;
+  let placeId = req.body.placeId;
+  let serviceTypeId = req.body.serviceTypeId;
+  let dueDate = req.body.dueDate;
+  let details = req.body.details;
+  let isPublic = false;
+  let proVIPId = req.body.proVIPId;
+
+  if(!costumerId || !placeId || !serviceTypeId || !dueDate || !details || !proVIPId) {
+    res.status(400).json({ message: "missing parameters" });
+  } else {
+    Promise.all([
+      new Costumer().get('id', costumerId),
+      new Place().get('id', placeId),
+      new ServiceType().get('id', serviceTypeId),
+    ]).then((results) => {
+      return new Demand(results[0], results[1], results[2], dueDate, details, isPublic, proVIPId).create()
+    }).then((demand) => {
+      res.status(201).json(demand)
+    }).catch((error) => {
+      console.log(error)
+      res.status(500).json({ message: error.message })
+    })
   }
 });
 

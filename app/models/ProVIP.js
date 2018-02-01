@@ -2,8 +2,8 @@ import { Pro } from './';
 import { Pool } from '../../config';
 
 export class ProVIP extends Pro {
-  constructor (pro, ein, companyName, licenseNumber = null){
-    super (pro.firstName, pro.lastName, pro.email, pro.password, pro.contactNumber, pro.address, pro.hasInsurance, pro.avarageResponseTime, pro.rate, pro.lastPayment, pro.id);
+  constructor (firstName, lastName, email, password, contactNumber, address, hasInsurance, actionRadious, ein, companyName, licenseNumber = null, avarageResponseTime = null, rate = null, lastPaymentDate = null, proId){
+    super (firstName, lastName, email, password, contactNumber, address, hasInsurance, actionRadious, avarageResponseTime, rate, lastPaymentDate, proId);
     this.ein = ein;
     this.companyName = companyName;
     this.licenseNumber = licenseNumber;
@@ -30,7 +30,11 @@ export class ProVIP extends Pro {
         return ({ results: results, pro: pro })
       }).then(({ results: results, pro: pro }) => {
         return results.then((res) => {
-          return new ProVIP(pro, res[0].ein, res[0].company_name, res[0].licenseNumber)
+          return new ProVIP(pro.firstName, pro.lastName, pro.email, pro.password,
+             pro.contactNumber, pro.address, pro.hasInsurance, pro.actionRadious,
+              pro.ein, pro.companyName, pro.licenseNumber, pro.avarageResponseTime,
+              pro.rate, pro.lastPaymentDate, pro.id, res[0].ein, res[0].company_name,
+              res[0].license_number)
         })
       }).catch((error) => {
         throw error
