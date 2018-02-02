@@ -1,9 +1,9 @@
 import mysql from 'promise-mysql';
 
 export let Pool = mysql.createPool({
-  host           : '172.23.0.2',
-  user           : 'root',
-  password       : 'hgs21@2017',
-  database       : '7appserv_db',
-  connectionLimit: 5
+  host           : process.env.DB_HOST,
+  user           : process.env.DB_USER,
+  password       : process.env.DB_PASSWORD,
+  database       : process.env.DATABASE,
+  connectionLimit: process.env.DB_CONNECTIONS
 });

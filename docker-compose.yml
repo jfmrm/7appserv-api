@@ -3,8 +3,8 @@ version: '2'
 services:
   db:
     image: mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: hgs21@2017
+    env_file:
+      - locals.env
     volumes:
       - "./data/db:/var/lib/mysql"
     ports:
@@ -12,8 +12,8 @@ services:
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
-    environment:
-      MYSQL_ROOT_PASSWORD: hgs21@2017
+    env_file:
+      - locals.env
     ports:
       - "8181:80"
     links:
@@ -28,9 +28,7 @@ services:
     volumes:
       - .:/www
       - /www/node_modules
-    environment:
-       BAR_BANK_DB_HOST: db:3306
-       BAR_BANK_DB_USER: hgs21
-       BAR_BANK_DB_PASSWORD: hgs21@2017
+    env_file:
+       - locals.env
     networks:
       default:

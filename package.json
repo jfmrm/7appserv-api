@@ -29,6 +29,7 @@
     "express": "^4.16.2",
     "http": "0.0.0",
     "moment": "^2.20.1",
+    "nodemailer": "^4.4.2",
     "nodemon": "^1.14.9",
     "promise-mysql": "^3.1.5"
   }
