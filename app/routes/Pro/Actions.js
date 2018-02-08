@@ -14,4 +14,15 @@ router.get('/demands/public/:cityId', (req, res) => {
         });
 });
 
+router.get('/demands/:demandId', (req, res) => {
+    let demandId = req.params.demandId;
+
+    new Demand().get('id', demandId)
+        .then((demand) => {
+            res.status(200).json(demand)
+        }).catch((error) => {
+            res.status(500).json({ message: error.message })
+        });
+});
+
 export const ProActionsRouter = router;
