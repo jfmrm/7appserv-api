@@ -4,7 +4,8 @@ import bodyparser from 'body-parser';
 import mysql from 'promise-mysql';
 import { CostumerUserRouter,
          ProUserRouter,
-         CostumerActionsRouter } from '../app/routes';
+         CostumerActionsRouter,
+         ProActionsRouter } from '../app/routes';
 
 let app = express();
 
@@ -16,5 +17,6 @@ app.use(bodyparser.json());
 app.use('/api/costumers/users', CostumerUserRouter);
 app.use('/api/pros/users', ProUserRouter);
 app.use('/api/costumers', CostumerActionsRouter);
+app.use('/api/pros', ProActionsRouter);
 
 export const App = app;

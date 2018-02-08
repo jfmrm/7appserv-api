@@ -1,5 +1,5 @@
 import { Pool } from '../../config';
-import { Costumer, Place, ServiceType, Pro, ProVIP } from './';
+import { Costumer, Place, ServiceType, Pro, ProVIP, Address, City } from './';
 
 export class Demand {
   constructor(costumer, place, serviceType, dueDate, details, isPublic, pro, isOpen, lastModified, demandId) {
@@ -137,6 +137,36 @@ export class Demand {
         } else {
           throw new Error('Due Date list does not exists on this demand')
         }
+      }).catch((error) => {
+        throw error
+      });
+  }
+
+  getPublicDemandList(cityId) {
+      return Pool.query(`SELECT costumer.first_name as costumer_first_name,
+                          costumer.last_name as costumer_last_name,
+                          address.address_line, address.latitude, address.longitude,
+                          demand.last_modified,
+                          service_type.type as service_type
+                        FROM demand
+                        INNER JOIN costumer ON costumer.id = demand.costumer_id
+                        INNER JOIN place ON place.id = demand.place_id
+                        INNER JOIN address ON address.id = place.address_id
+                        INNER JOIN city ON city.id = address.city_id
+                        INNER JOIN service_type ON service_type.id = demand.service_type_id
+                        WHERE city.id = ?`, [cityId])
+      .then((results) => {
+        return results.map((demandListItem) => {
+          return { 
+            costumerFirstName: demandListItem.costumer_first_name,
+            costumerLastName: demandListItem.costumer_last_name,
+            addressLine: demandListItem.address_line,
+            latitude: demandListItem.latitude,
+            longitude: demandListItem.longitude,
+            lastModified: demandListItem.last_modified,
+            serviceType: demandListItem.service_type
+          }
+        })
       }).catch((error) => {
         throw error
       });
