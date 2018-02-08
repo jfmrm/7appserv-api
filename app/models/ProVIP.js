@@ -66,4 +66,25 @@ export class ProVIP extends Pro {
       });
   }
 
+  getProVIPList(cityId) {
+    return Pool.query(`SELECT pro.id, pro_vip.company_name, pro.rate, address.latitude, address.longitude, pro.action_radious
+                       FROM pro_vip
+                       INNER JOIN pro ON pro.id = pro_vip.pro_id
+                       INNER JOIN address ON pro.address_id = address.id
+                       WHERE pro_vip.pro_id = pro.id AND address.city_id = ?`, [cityId])
+      .then((results) => {
+        return results.map((proVIPListItem) => {
+          return {
+            proId: proVIPListItem.id,
+            companyName: proVIPListItem.company_name,
+            rate: proVIPListItem.rate,
+            latitude: proVIPListItem.latitude,
+            longitude: proVIPListItem.longitude,
+            actionRadious: proVIPListItem.action_radious
+          }
+        })
+      }).catch((error) => {
+        throw error
+      });
+  }
 }

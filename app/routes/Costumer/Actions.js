@@ -118,4 +118,15 @@ router.get('/demands', (req, res) => {
   }
 });
 
+router.get('/pros/vip/:cityId', (req, res) => {
+  let cityId = req.params.cityId
+
+  new ProVIP().getProVIPList(cityId)
+    .then((proVIPList) => {
+      res.status(200).json(proVIPList)
+    }).catch((error) => {
+      res.status(500).json({ message: error.message })
+    });
+});
+
 export const CostumerActionsRouter = router;
