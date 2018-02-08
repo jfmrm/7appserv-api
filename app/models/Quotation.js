@@ -5,6 +5,7 @@ export class Quotation {
     constructor (pro, demand, value, dueDate, details, visulized, id) {
         this.pro = pro;
         this.demand = demand;
+        this.value = value;
         this.dueDate = dueDate;
         this.details = details;
         this.visulized = visulized;
@@ -12,7 +13,7 @@ export class Quotation {
     }
 
     create() {
-        return Pool.query(`INSERT INTO quotation (pro_id, demand_id, value, dueDate, details) VALUES
+        return Pool.query(`INSERT INTO quotation (pro_id, demand_id, value, due_date, details)
                             VALUES (?, ?, ?, ?, ?)`, [this.pro, this.demand, this.value, this.dueDate, this.details])
             .then((results) => {
                 return this.get('id', results.insertId)
@@ -28,7 +29,7 @@ export class Quotation {
                     new Pro().get('id', results[0].pro_id),
                     new Demand().get('id', results[0].demand_id),
                 ]).then((res) => {
-                    return new Quotation(res[0], res[1], results[0].value, results[0].due_date, results[0].visulized, results[0].id)
+                    return new Quotation(res[0], res[1], results[0].value, results[0].due_date, results[0].details, results[0].visulized, results[0].id)
                 })
             }).catch((error) => {
                 throw error
@@ -36,8 +37,8 @@ export class Quotation {
     }
 
     update() {
-        return Pool.query('UPDATE quotation SET pro_id = ?, value = ?, due_date = ?, details = ? WHERE id = ?',
-                            [this.pro, this.value, this.dueDate, this.details, this.id])
+        return Pool.query('UPDATE quotation SET value = ?, due_date = ?, details = ? WHERE id = ?',
+                            [this.value, this.dueDate, this.details, this.id])
             .then((results) => {
                 return this.get('id', this.id)
             }).catch((error) => {

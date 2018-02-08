@@ -8,3 +8,4 @@ export { Demand }      from './Demand';
 export { ServiceType } from './ServiceType';
 export { Service }     from './Service';
 export { City }        from './City';
+export { Quotation }   from './Quotation';
