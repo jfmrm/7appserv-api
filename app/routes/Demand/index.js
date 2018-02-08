@@ -1,0 +1,1 @@
+export { DemandCRUDRouter } from './CRUD';

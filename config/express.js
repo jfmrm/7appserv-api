@@ -5,7 +5,8 @@ import mysql from 'promise-mysql';
 import { CostumerUserRouter,
          ProUserRouter,
          CostumerActionsRouter,
-         ProActionsRouter } from '../app/routes';
+         ProActionsRouter,
+         DemandCRUDRouter } from '../app/routes';
 
 let app = express();
 
@@ -18,5 +19,6 @@ app.use('/api/costumers/users', CostumerUserRouter);
 app.use('/api/pros/users', ProUserRouter);
 app.use('/api/costumers', CostumerActionsRouter);
 app.use('/api/pros', ProActionsRouter);
+app.use('/api/demands', DemandCRUDRouter);
 
 export const App = app;

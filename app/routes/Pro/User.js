@@ -96,4 +96,16 @@ router.get('/', (req, res) => {
   }
 });
 
+//list pros avable on the given city
+router.get('/vip/:cityId', (req, res) => {
+  let cityId = req.params.cityId
+
+  new ProVIP().getProVIPList(cityId)
+    .then((proVIPList) => {
+      res.status(200).json(proVIPList)
+    }).catch((error) => {
+      res.status(500).json({ message: error.message })
+    });
+});
+
 export const ProUserRouter = router;
