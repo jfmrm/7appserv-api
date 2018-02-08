@@ -1,4 +1,4 @@
-import { Costumer, Address, City, Place } from '../../models';
+import { Costumer, Address, City, Place } from 'models';
 import { Router } from 'express';
 
 let router = Router();

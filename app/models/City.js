@@ -1,4 +1,4 @@
-import { Pool } from '../../config';
+import { Pool } from 'config';
 
 export class City {
   constructor(name, cityId) {

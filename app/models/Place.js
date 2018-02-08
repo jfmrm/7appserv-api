@@ -1,5 +1,5 @@
-import { Pool } from '../../config';
-import { Address } from './';
+import { Pool } from 'config';
+import { Address } from 'models';
 
 export class Place {
   constructor(costumerId, size, bathrooms, address, placeId) {

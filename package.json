@@ -20,6 +20,7 @@
   "homepage": "https://github.com/jfmrm/7appserv-api#readme",
   "devDependencies": {
     "babel-cli": "^6.26.0",
+    "babel-plugin-module-resolver": "^3.0.0",
     "babel-preset-env": "^1.6.1",
     "morgan": "^1.9.0",
     "rimraf": "^2.6.2"

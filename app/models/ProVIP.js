@@ -1,5 +1,5 @@
-import { Pro } from './';
-import { Pool } from '../../config';
+import { Pro } from 'models';
+import { Pool } from 'config';
 
 export class ProVIP extends Pro {
   constructor (firstName, lastName, email, password, contactNumber, address, hasInsurance, actionRadious, ein, companyName, licenseNumber = null, avarageResponseTime = null, rate = null, lastPaymentDate = null, proId){

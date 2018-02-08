@@ -1,5 +1,5 @@
-import { User, Place } from './';
-import { Pool } from '../../config';
+import { User, Place } from 'models';
+import { Pool } from 'config';
 
 export class Costumer extends User {
   constructor (firstName, lastName, email, password = null, contactNumber, places = [], costumerId) {

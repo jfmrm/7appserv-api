@@ -1,5 +1,5 @@
-import { Pool } from '../../config';
-import { Costumer, Place, ServiceType, Pro, ProVIP, Address, City } from './';
+import { Pool } from 'config';
+import { Costumer, Place, ServiceType, Pro, ProVIP, Address, City } from 'models';
 
 export class Demand {
   constructor(costumer, place, serviceType, dueDate, details, isPublic, pro, isOpen, lastModified, demandId) {

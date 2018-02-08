@@ -1,5 +1,5 @@
-import { User, Address } from './';
-import { Pool } from '../../config';
+import { User, Address } from 'models';
+import { Pool } from 'config';
 
 export class Pro extends User {
   constructor (firstName, lastName, email, password, contactNumber, address, hasInsurance, actionRadious, avarageResponseTime = null, rate = null, lastPaymentDate = null, proId) {

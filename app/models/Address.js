@@ -1,5 +1,5 @@
-import { Pool } from '../../config';
-import { City } from './';
+import { Pool } from 'config';
+import { City } from 'models';
 
 export class Address {
   constructor(addressLine, addressLine2, district, city, zipCode, latitude, longitude, addressId) {

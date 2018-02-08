@@ -1,5 +1,5 @@
-import { Pool } from '../../config';
-import { Demand, Pro } from './';
+import { Pool } from 'config';
+import { Demand, Pro } from 'models';
 
 export class Service extends Demand {
   constructor(demand, pro, isGoing, isDone, doneTime, started, startTime, serviceId) {
