@@ -6,8 +6,7 @@ import { CostumerUserRouter,
          ProUserRouter,
          CostumerActionsRouter,
          ProActionsRouter,
-         DemandCRUDRouter,
-         QuotationCRUDRouter } from '../app/routes';
+         DemandRouter } from 'routes';
 
 let app = express();
 
@@ -20,7 +19,6 @@ app.use('/api/costumers/users', CostumerUserRouter);
 app.use('/api/pros/users', ProUserRouter);
 app.use('/api/costumers', CostumerActionsRouter);
 app.use('/api/pros', ProActionsRouter);
-app.use('/api/demands', DemandCRUDRouter);
-app.use('/api/quotations', QuotationCRUDRouter);
+app.use('/api/demands', DemandRouter);
 
 export const App = app;

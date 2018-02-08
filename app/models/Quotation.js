@@ -58,4 +58,39 @@ export class Quotation {
                 throw error
             })
     }
+
+    getQuotationListFromDemand(demandId) {
+        return Promise.all([
+            Pool.query(`SELECT pro_vip.company_name, pro.rate, quotation.value, quotation.id 
+                        FROM quotation
+                        INNER JOIN pro ON pro.id = quotation.pro_id
+                        INNER JOIN pro_vip ON pro.id
+                        WHERE demand_id = ?`, [demandId]),
+            Pool.query(`SELECT pro.first_name, pro.last_name, quotation.value, quotation.id
+                        FROM quotation
+                        INNER JOIN pro ON pro.id = quotation.pro_id
+                        WHERE demand_id = ?`, [demandId])
+        ]).then((results) => {
+            let vipQuotations = results[0].map((vipQuotation) => {
+                return { 
+                    companyName: vipQuotation.companyName,
+                    proRate: vipQuotation.rate,
+                    value: vipQuotation.value,
+                    quotationId: vipQuotation.id
+                }
+            })
+            let standrdQuotations = results[1].map((standardQuotation) => {
+                return {
+                    proFirstName: standardQuotation.first_name,
+                    proLastName: standardQuotation.last_name,
+                    value: standardQuotation.value,
+                    quotationId: standardQuotation.id
+                }
+            })
+
+            return { vipQuotation: vipQuotations, standardQuotation: standrdQuotations}
+        }).catch((error) => {
+            throw error
+        });
+    }
 }

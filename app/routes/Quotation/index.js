@@ -1,1 +1,0 @@
-export { QuotationCRUDRouter } from './CRUD';
