@@ -127,6 +127,7 @@ router.get('/public/:cityId', (req, res) => {
 });
 
 //Quotation stuff
+//Create quotation
 router.post('/quotations', (req, res) => {
   let proId = req.body.proId;
   let demandId = req.body.demandId;
@@ -139,14 +140,14 @@ router.post('/quotations', (req, res) => {
   } else {
       new Quotation(proId, demandId, value, dueDate, details).create()
           .then((quotation) => {
-              res.status(201).json(quotation)
+            res.status(201).json(quotation)
           }).catch((error) => {
-              res.status(500).json({ message: error.message })
+            res.status(500).json({ message: error.message })
           });
   }
 });
 
-
+//update quotations
 router.put('/quotations', (req, res) => {
   let value = req.body.value;
   let dueDate = req.body.dueDate;
@@ -165,6 +166,7 @@ router.put('/quotations', (req, res) => {
   }
 });
 
+//remove quotations
 router.delete('/quotations/:quotationId', (req, res) => {
   let quotationId = req.params.quotationId;
   
@@ -183,6 +185,7 @@ router.delete('/quotations/:quotationId', (req, res) => {
   });
 })
 
+//gets a given quotation
 router.get('/quotations/:quotationId', (req, res) => {
   let quotationId = req.params.quotationId;
 
