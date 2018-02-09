@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { Costumer, Place, ServiceType, Demand, Quotation } from 'models';
+import { Costumer, Place, ServiceType, Demand, Quotation, Service } from 'models';
 
 let router = Router();
 
@@ -220,6 +220,28 @@ router.patch('/quotations/visualize/:demandId', (req, res) => {
     }).catch((error) => {
       res.status(500).json({ message: error.message })
     });
+});
+
+router.patch('/quotations/:quotationId/accept', (req, res) => {
+    let quotationId = req.params.quotationId;
+
+    new Quotation().accept(quotationId)
+        .then((result) => {
+            if (result == true) return
+        }).then(() => {
+            return new Quotation().get('id', quotationId)
+        }).then((quotation) => {
+            console.log(quotation.demand.id)
+            return new Service(quotation.demand, quotation.pro.id).create()
+        }).then((service) => {
+            new Demand().close(service.id)
+                .then((result) => {
+                    res.status(201).json(service)
+                })
+        }).catch((error) => {
+            console.log(error)
+            res.status(500).json({ message: error.message })
+        });
 });
 
 export const DemandRouter = router;

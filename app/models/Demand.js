@@ -170,4 +170,17 @@ export class Demand {
         throw error
       });
   }
+
+  close(demandId) {
+    return Pool.query('UPDATE demand SET is_open = false WHERE id = ?', [demandId])
+      .then((result) => {
+        if (result.affectedRows == 1) {
+          return true;
+        } else {
+          throw new Error('Could not close this demand')
+        }
+      }).catch((error) => {
+        throw error
+      });
+  }
 }

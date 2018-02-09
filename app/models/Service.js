@@ -3,7 +3,7 @@ import { Demand, Pro } from 'models';
 
 export class Service extends Demand {
   constructor(demand, pro, isGoing, isDone, doneTime, started, startTime, serviceId) {
-    super(demand.id, demand.costumer, demand.place, demand.serviceType, demand.dueDate, demand.details, demand.isOpen, demand.lastModified);
+    super(demand.costumer, demand.place, demand.serviceType, demand.dueDate, demand.details, demand.isPublic, demand.pro, demand.isOpen, demand.lastModified, demand.id);
     this.pro = pro;
     this.isGoing = isGoing;
     this.isDone = isDone;
@@ -14,7 +14,7 @@ export class Service extends Demand {
   }
 
   create() {
-    return Pool.query('INSERT INTO service (demand_id, pro_id) VALUES (?, ?)', [this.id, this.pro.id])
+    return Pool.query('INSERT INTO service (demand_id, pro_id) VALUES (?, ?)', [this.id, this.pro])
       .then((results) => {
         return this.get('id', results.insertId)
       }).catch((error) => {

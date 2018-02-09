@@ -3,7 +3,7 @@ import { Pro, Demand } from 'models';
 import { isError } from 'util';
 
 export class Quotation {
-    constructor (pro, demand, value, dueDate, details, visulized, id) {
+    constructor (pro, demand, value, dueDate, details, visulized, id, serviceId) {
         this.pro = pro;
         this.demand = demand;
         this.value = value;
@@ -11,6 +11,7 @@ export class Quotation {
         this.details = details;
         this.visulized = visulized;
         this.id = id;
+        this.serviceId = serviceId;
     }
 
     create() {
@@ -30,7 +31,7 @@ export class Quotation {
                     new Pro().get('id', results[0].pro_id),
                     new Demand().get('id', results[0].demand_id),
                 ]).then((res) => {
-                    return new Quotation(res[0], res[1], results[0].value, results[0].due_date, results[0].details, results[0].visulized, results[0].id)
+                    return new Quotation(res[0], res[1], results[0].value, results[0].due_date, results[0].details, results[0].visulized, results[0].id, results[0].service_id)
                 })
             }).catch((error) => {
                 throw error
@@ -103,6 +104,20 @@ export class Quotation {
                     return true
                 } else {
                     throw new Error("Could not alter quotation visualization status")
+                }
+            }).catch((error) => {
+                throw error
+            });
+    }
+
+    accept(quotationId) {
+        return Pool.query('UPDATE quotation SET chosen = true WHERE id = ?', [quotationId])
+            .then((results) => {
+                console.log(quotationId)
+                if (results.affectedRows == 1) {
+                    return true
+                } else {
+                    throw new Error('Could not accept quotation')
                 }
             }).catch((error) => {
                 throw error
