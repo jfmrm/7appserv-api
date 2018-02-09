@@ -1,5 +1,6 @@
 import { Pool } from 'config';
 import { Pro, Demand } from 'models';
+import { isError } from 'util';
 
 export class Quotation {
     constructor (pro, demand, value, dueDate, details, visulized, id) {
@@ -92,5 +93,19 @@ export class Quotation {
         }).catch((error) => {
             throw error
         });
+    }
+
+    visualize(demandId) {
+        return Pool.query('UPDATE quotation SET visualized = true WHERE demand_id = ?', [demandId])
+            .then((results) => {
+                if(results.affectedRows >= 0) {
+                    //trigger notification to the pro
+                    return true
+                } else {
+                    throw new Error("Could not alter quotation visualization status")
+                }
+            }).catch((error) => {
+                throw error
+            });
     }
 }

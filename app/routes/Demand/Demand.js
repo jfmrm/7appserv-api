@@ -209,4 +209,17 @@ router.get('/:demandId/quotations', (req, res) => {
       });
 });
 
+router.patch('/quotations/visualize/:demandId', (req, res) => {
+  let demandId = req.params.demandId;
+
+  new Quotation().visualize(demandId)
+    .then((response) => {
+      if (response == true) {
+        res.status(200).json({ message: "Success"})
+      }
+    }).catch((error) => {
+      res.status(500).json({ message: error.message })
+    });
+});
+
 export const DemandRouter = router;
