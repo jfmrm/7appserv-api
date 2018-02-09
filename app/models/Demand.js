@@ -153,7 +153,7 @@ export class Demand {
                         INNER JOIN address ON address.id = place.address_id
                         INNER JOIN city ON city.id = address.city_id
                         INNER JOIN service_type ON service_type.id = demand.service_type_id
-                        WHERE city.id = ?`, [cityId])
+                        WHERE city.id = ? AND is_open = true`, [cityId])
       .then((results) => {
         return results.map((demandListItem) => {
           return { 
