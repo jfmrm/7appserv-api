@@ -7,7 +7,9 @@ import { CostumerUserRouter,
          CostumerActionsRouter,
          ProActionsRouter,
          DemandRouter,
-         QuotationRouter } from 'routes';
+         QuotationRouter,
+         ServiceRouter,
+         ServiceTypeRouter } from 'routes';
 
 let app = express();
 
@@ -21,6 +23,8 @@ app.use('/api/pros/users', ProUserRouter);
 app.use('/api/costumers', CostumerActionsRouter);
 app.use('/api/pros', ProActionsRouter);
 app.use('/api/demands', DemandRouter);
-app.use('/api/demands/quotations', QuotationRouter)
+app.use('/api/demands/quotations', QuotationRouter);
+app.use('/api/demands/services', ServiceRouter);
+app.use('/api/adm/service_types', ServiceTypeRouter);
 
 export const App = app;

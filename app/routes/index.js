@@ -3,4 +3,6 @@ export { ProUserRouter,
 export { CostumerUserRouter,
          CostumerActionsRouter } from './Costumer';
 export { DemandRouter,
-         QuotationRouter } from './Demand';
+         QuotationRouter,
+         ServiceRouter } from './Demand';
+export { ServiceTypeRouter } from './Adm';
