@@ -1,6 +1,7 @@
 import { Pool } from 'config';
 import { Pro, Demand } from 'models';
 import { isError } from 'util';
+import { Service } from './Service';
 
 export class Quotation {
     constructor (pro, demand, value, dueDate, details, visulized, id, serviceId) {
@@ -85,6 +86,7 @@ export class Quotation {
                 return {
                     proFirstName: standardQuotation.first_name,
                     proLastName: standardQuotation.last_name,
+                    //add rating
                     value: standardQuotation.value,
                     quotationId: standardQuotation.id
                 }
@@ -113,12 +115,19 @@ export class Quotation {
     accept(quotationId) {
         return Pool.query('UPDATE quotation SET chosen = true WHERE id = ?', [quotationId])
             .then((results) => {
-                console.log(quotationId)
-                if (results.affectedRows == 1) {
-                    return true
-                } else {
-                    throw new Error('Could not accept quotation')
-                }
+                return Pool.query('SELECT pro_id, demand_id FROM quotation WHERE id = ?', [quotationId])
+            }).then((results) => {
+                let p = new Demand().close(results[0].demand_id)
+                return {p, results}
+            }).then(({p, results}) => {
+                return p.then((closed) => {
+                    p = new Demand().get('id', results[0].demand_id)
+                    return {p, results}
+                })
+            }).then(({p, results}) => {
+                return p.then((demand) => {
+                    return new Service(demand, results[0].pro_id).create()
+                })
             }).catch((error) => {
                 throw error
             });

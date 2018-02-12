@@ -60,12 +60,24 @@ export class Service extends Demand {
       });
   }
 
-//not tested yet
-  startService() {
-    return Pool.query('UPDATE service SET started = ? WHERE id = ?', [true, this.serviceId])
+  static going(serviceId) {
+    return Pool.query('UPDATE service SET is_going = true WHERE id = ?', [serviceId])
+      .then((res) => {
+        if(res.affectedRows == 1) {
+          return true
+        } else {
+          throw new Error('Can not update this service status')
+        }
+      }).catch((error) => {
+        throw error
+      });
+  }
+
+  static startService(serviceId) {
+    return Pool.query('UPDATE service SET started = true WHERE id = ?', [serviceId])
       .then((restults) => {
-        return Pool.query('SELECT start_time FROM service WHERE id = ?', [this.serviceId])
-      }).then((restults) => {
+        return Pool.query('SELECT start_time FROM service WHERE id = ?', [serviceId])
+      }).then((results) => {
         return results[0].start_time
       }).catch((error) => {
         throw error
