@@ -28,4 +28,16 @@ router.post('/:serviceId/start_service', (req, res) => {
         });
 });
 
+router.post('/:serviceId/finish_service', (req, res) => {
+    let serviceId = req.params.serviceId;
+
+    Service.finishService(serviceId)
+        .then((doneTime) => {
+            res.status(200).json(doneTime)
+        }).catch((error) => {
+            console.log(error)
+            res.status(500).json({ message: error.message })
+        });
+});
+
 export const ServiceRouter = router;

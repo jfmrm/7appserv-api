@@ -78,7 +78,20 @@ export class Service extends Demand {
       .then((restults) => {
         return Pool.query('SELECT start_time FROM service WHERE id = ?', [serviceId])
       }).then((results) => {
-        return results[0].start_time
+        let startTime = results[0].start_time
+        return { startTime }
+      }).catch((error) => {
+        throw error
+      });
+  }
+
+  static finishService(serviceId) {
+    return Pool.query('UPDATE service SET is_done = true WHERE id = ?', [serviceId])
+      .then((res) => {
+        return Pool.query('SELECT done_time FROM service WHERE id = ?', [serviceId])
+      }).then((results) => {
+        let doneTime = results[0].done_time
+        return { doneTime }
       }).catch((error) => {
         throw error
       });
