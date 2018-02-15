@@ -66,8 +66,8 @@ export class Place {
       });
   }
 
-  getListByCostumerId(costumerId) {
-    //queries all Places from a costumer
+  getListByCustomerId(costumerId) {
+    //queries all Places from a customer
     return Pool.query('SELECT id FROM place WHERE costumer_id = ?', [costumerId])
       .then((results) => {
         return Promise.all(results.map((place) => {

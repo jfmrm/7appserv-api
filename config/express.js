@@ -2,10 +2,8 @@ import express from 'express';
 import morgan from 'morgan';
 import bodyparser from 'body-parser';
 import mysql from 'promise-mysql';
-import { CostumerUserRouter,
+import { CustomerUserRouter,
          ProUserRouter,
-         CostumerActionsRouter,
-         ProActionsRouter,
          DemandRouter,
          QuotationRouter,
          ServiceRouter,
@@ -18,10 +16,8 @@ app.use(morgan('dev'));
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json());
 
-app.use('/api/costumers/users', CostumerUserRouter);
+app.use('/api/customers/users', CustomerUserRouter);
 app.use('/api/pros/users', ProUserRouter);
-app.use('/api/costumers', CostumerActionsRouter);
-app.use('/api/pros', ProActionsRouter);
 app.use('/api/demands', DemandRouter);
 app.use('/api/demands/quotations', QuotationRouter);
 app.use('/api/demands/services', ServiceRouter);

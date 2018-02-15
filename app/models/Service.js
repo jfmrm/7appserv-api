@@ -3,7 +3,7 @@ import { Demand, Pro } from 'models';
 
 export class Service extends Demand {
   constructor(demand, pro, isGoing, isDone, doneTime, started, startTime, serviceId) {
-    super(demand.costumer, demand.place, demand.serviceType, demand.dueDate, demand.details, demand.isPublic, demand.pro, demand.isOpen, demand.lastModified, demand.id);
+    super(demand.customer, demand.place, demand.serviceType, demand.dueDate, demand.details, demand.isPublic, demand.pro, demand.isOpen, demand.lastModified, demand.id);
     this.pro = pro;
     this.isGoing = isGoing;
     this.isDone = isDone;

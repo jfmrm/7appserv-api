@@ -1,8 +1,8 @@
-import { Costumer, Address, City, Place } from 'models';
+import { Customer, Address, City, Place } from 'models';
 import { Router } from 'express';
 
 let router = Router();
-//creates a new Costumer
+//creates a new Customer
 router.post('/', (req, res) => {
   let firstName = req.body.firstName;
   let lastName = req.body.lastName;
@@ -13,10 +13,10 @@ router.post('/', (req, res) => {
   if(!firstName || !lastName || !email || !password || !contactNumber) {
     res.status(400).json({ message: 'missing arguments'});
   } else {
-    let costumer = new Costumer(firstName, lastName, email, password, contactNumber);
-    costumer.create()
-      .then((costumer) => {
-        res.status(201).json(costumer)
+    let customer = new Customer(firstName, lastName, email, password, contactNumber);
+    customer.create()
+      .then((customer) => {
+        res.status(201).json(customer)
       }).catch((error) => {
         res.status(500).json({ message: error.message })
       });
@@ -24,7 +24,7 @@ router.post('/', (req, res) => {
 });
 
 //from here needs authentication
-//edit Costumer
+//edit Customer
 //this method doesn't edit the email and the password, theese will have its own methods
 router.put('/', (req, res) => {
   let firstName = req.body.firstName;
@@ -35,9 +35,9 @@ router.put('/', (req, res) => {
   if(!firstName || !lastName || !email || !contactNumber) {
     res.status(400).json({ message: 'missing parameters' });
   } else {
-    new Costumer(firstName, lastName, email, null, contactNumber).update()
-      .then((costumer) => {
-        res.status(200).json(costumer)
+    new Customer(firstName, lastName, email, null, contactNumber).update()
+      .then((customer) => {
+        res.status(200).json(customer)
       }).catch((error) => {
         res.status(500).json({ message: error.message })
       });
@@ -45,54 +45,50 @@ router.put('/', (req, res) => {
 });
 
 router.delete('/', (req, res) => {
-  let costumerId = req.query.costumerId;
+  let customerId = req.params.customerId;
 
-  if(!costumerId) {
+  if(!customerId) {
     res.status(400).json({ message: "missing parameters" })
   } else {
-    let costumer = new Costumer();
-    costumer.id = costumerId;
-    costumer.remove()
+    let customer = new Customer();
+    customer.id = customerId;
+    customer.remove()
       .then((deleted) => {
-        if (deleted) res.status(200).json({ message: "Costumer successfully deleted" })
+        if (deleted) res.status(200).json({ message: "Customer successfully deleted" })
       }).catch((error) => {
         res.status(500).json({ messate: error.message })
       });
   }
 });
 
-//get costumer
-router.get('/', (req, res) => {
-  let costumerId = req.query.costumerId;
+//get customer
+router.get('/:customerId', (req, res) => {
+  let customerId = req.params.customerId;
 
-  if(!costumerId) {
-    res.status(400).json({ message: 'missing parameters' });
-  } else {
-    new Costumer().get('id', costumerId)
-      .then((costumer) => {
-        res.status(200).json(costumer)
+    new Customer().get('id', customerId)
+      .then((customer) => {
+        res.status(200).json(customer)
       }).catch((error) => {
         console.log(error)
         res.status(500).json({ message: error.message })
       });
-  }
 });
 
 //Place stuff
 //crate Place
 router.post('/places', (req, res) => {
-  let costumerId = req.body.costumerId;
+  let customerId = req.body.customerId;
   let size = req.body.size;
   let bathrooms = req.body.bathrooms;
   let address = req.body.address;
 
-  if(!costumerId || !size || !bathrooms || !address) {
+  if(!customerId || !size || !bathrooms || !address) {
     res.status(400).json({ message: "missing parameters" });
   } else {
     new City().get('id', address.cityId)
       .then((city) => {
         let addr = new Address(address.addressLine, address.addressLine2, address.district, city, address.zipCode, address.latitude, address.longitude, address.id)
-        return new Place(costumerId, size, bathrooms, addr).create()
+        return new Place(customerId, size, bathrooms, addr).create()
       }).then((place) => {
         res.status(201).json(place)
       }).catch((error) => {
@@ -160,4 +156,4 @@ router.get('/places', (req, res) => {
   }
 });
 
-export const CostumerUserRouter = router;
+export const CustomerUserRouter = router;

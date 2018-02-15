@@ -1,7 +1,7 @@
 export { ProUserRouter,
          ProActionsRouter } from './Pro';
-export { CostumerUserRouter,
-         CostumerActionsRouter } from './Costumer';
+export { CustomerUserRouter,
+         CustomerActionsRouter } from './Customer';
 export { DemandRouter,
          QuotationRouter,
          ServiceRouter } from './Demand';

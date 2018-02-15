@@ -1,24 +1,24 @@
 import { Router } from 'express';
-import { Costumer, Place, ServiceType, Demand, Quotation, Service } from 'models';
+import { Customer, Place, ServiceType, Demand, Quotation, Service } from 'models';
 
 let router = Router();
 
 //needs authentication
 //Create new Demand to be posted to all pros in the area
 router.post('/public', (req, res) => {
-    let costumerId = req.body.costumerId;
+    let customerId = req.body.customerId;
     let placeId = req.body.placeId;
     let serviceTypeId = req.body.serviceTypeId;
     let dueDate = req.body.dueDate;
     let details = req.body.details;
     let isPublic = true;
 
-    if(!costumerId || !placeId || !serviceTypeId || !dueDate || !details) {
+    if(!customerId || !placeId || !serviceTypeId || !dueDate || !details) {
         res.status(400).json({ message: "missing parameters" });
     } else {
         //retrieves demand dependecies
         Promise.all([
-        new Costumer().get('id', costumerId),
+        new Customer().get('id', customerId),
         new Place().get('id', placeId),
         new ServiceType().get('id', serviceTypeId)
         ]).then((results) => {
@@ -33,7 +33,7 @@ router.post('/public', (req, res) => {
 
 // create private demand
 router.post('/private', (req, res) => {
-    let costumerId = req.body.costumerId;
+    let customerId = req.body.customerId;
     let placeId = req.body.placeId;
     let serviceTypeId = req.body.serviceTypeId;
     let dueDate = req.body.dueDate;
@@ -41,11 +41,11 @@ router.post('/private', (req, res) => {
     let isPublic = false;
     let proVIPId = req.body.proVIPId;
   
-    if(!costumerId || !placeId || !serviceTypeId || !dueDate || !details || !proVIPId) {
+    if(!customerId || !placeId || !serviceTypeId || !dueDate || !details || !proVIPId) {
       res.status(400).json({ message: "missing parameters" });
     } else {
       Promise.all([
-        new Costumer().get('id', costumerId),
+        new Customer().get('id', customerId),
         new Place().get('id', placeId),
         new ServiceType().get('id', serviceTypeId),
       ]).then((results) => {

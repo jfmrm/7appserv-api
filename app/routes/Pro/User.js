@@ -1,4 +1,4 @@
-import { Costumer, Pro, ProVIP, Address, City } from 'models';
+import { Customer, Pro, ProVIP, Address, City } from 'models';
 import { Router } from 'express';
 
 let router = Router();
