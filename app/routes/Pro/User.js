@@ -31,7 +31,8 @@ router.post('/', (req, res) => {
 
 
 //edit Pro
-router.put('/', (req, res) => {
+router.put('/:proId', (req, res) => {
+  let proId = req.params.proId;
   let firstName = req.body.firstName;
   let lastName = req.body.lastName;
   let email = req.body.email;
@@ -81,8 +82,8 @@ router.delete('/', (req, res) => {
 });
 
 //get pro
-router.get('/', (req, res) => {
-  let proId = req.query.proId;
+router.get('/:proId', (req, res) => {
+  let proId = req.params.proId;
 
   if(!proId) {
     res.status(400).json({ message: 'missing parameters' });

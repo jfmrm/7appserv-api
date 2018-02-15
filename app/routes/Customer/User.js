@@ -26,7 +26,8 @@ router.post('/', (req, res) => {
 //from here needs authentication
 //edit Customer
 //this method doesn't edit the email and the password, theese will have its own methods
-router.put('/', (req, res) => {
+router.put('/:customerId', (req, res) => {
+  let customerId = req.params.customerId;
   let firstName = req.body.firstName;
   let lastName = req.body.lastName;
   let email = req.body.email;
@@ -35,7 +36,7 @@ router.put('/', (req, res) => {
   if(!firstName || !lastName || !email || !contactNumber) {
     res.status(400).json({ message: 'missing parameters' });
   } else {
-    new Customer(firstName, lastName, email, null, contactNumber).update()
+    new Customer(firstName, lastName, email, null, contactNumber, customerId).update()
       .then((customer) => {
         res.status(200).json(customer)
       }).catch((error) => {
@@ -44,7 +45,7 @@ router.put('/', (req, res) => {
   }
 });
 
-router.delete('/', (req, res) => {
+router.delete('/:customerId', (req, res) => {
   let customerId = req.params.customerId;
 
   if(!customerId) {
@@ -76,8 +77,8 @@ router.get('/:customerId', (req, res) => {
 
 //Place stuff
 //crate Place
-router.post('/places', (req, res) => {
-  let customerId = req.body.customerId;
+router.post('/:customerId/places', (req, res) => {
+  let customerId = req.params.customerId;
   let size = req.body.size;
   let bathrooms = req.body.bathrooms;
   let address = req.body.address;
@@ -98,7 +99,8 @@ router.post('/places', (req, res) => {
   }
 });
 
-router.put('/places', (req, res) => {
+router.put('/:customerId/places', (req, res) => {
+  let customer = req.body.customerId;
   let placeId = req.body.placeId;
   let size = req.body.size;
   let bathrooms = req.body.bathrooms;
@@ -121,8 +123,8 @@ router.put('/places', (req, res) => {
   }
 });
 
-router.delete('/places', (req, res) => {
-  let placeId = req.query.placeId;
+router.delete('/:customerId/places/:placeId', (req, res) => {
+  let placeId = req.params.placeId;
 
   if(!placeId) {
     res.status(400).json({ message: 'missing parameters' })
@@ -141,7 +143,7 @@ router.delete('/places', (req, res) => {
   }
 });
 
-router.get('/places', (req, res) => {
+router.get('/:customerId/places', (req, res) => {
   let placeId = req.query.placeId;
 
   if(!placeId) {

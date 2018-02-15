@@ -75,7 +75,7 @@ router.delete('/:quotationId', (req, res) => {
   
   
   
-router.patch('/visualize/:demandId', (req, res) => {
+router.patch('/visualize', (req, res) => {
     let demandId = req.params.demandId;
   
     new Quotation().visualize(demandId)
@@ -89,6 +89,7 @@ router.patch('/visualize/:demandId', (req, res) => {
 });
   
 router.patch('/:quotationId/accept', (req, res) => {
+    let demandId = req.params.demandId;
     let quotationId = req.params.quotationId;
 
     new Quotation().accept(quotationId)

@@ -59,8 +59,8 @@ router.post('/private', (req, res) => {
 });
   
   //edit demand
-router.put('/', (req, res) => {
-    let demandId = req.body.demandId;
+router.put('/:demandId', (req, res) => {
+    let demandId = req.params.demandId;
     let placeId = req.body.placeId;
     let serviceTypeId = req.body.serviceTypeId;
     let dueDate = req.body.dueDate;

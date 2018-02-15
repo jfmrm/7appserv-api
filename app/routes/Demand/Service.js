@@ -4,6 +4,7 @@ import { Service } from 'models';
 let router = Router();
 
 router.post('/:serviceId/going', (req, res) => {
+    let demandId = req.params.demandId;
     let serviceId = req.params.serviceId;
 
     Service.going(serviceId)
@@ -19,6 +20,7 @@ router.post('/:serviceId/going', (req, res) => {
 
 router.post('/:serviceId/start_service', (req, res) => {
     let serviceId = req.params.serviceId;
+    let demandId = req.params.demandId;
 
     Service.startService(serviceId)
         .then((result) => {
@@ -30,7 +32,8 @@ router.post('/:serviceId/start_service', (req, res) => {
 
 router.post('/:serviceId/finish_service', (req, res) => {
     let serviceId = req.params.serviceId;
-
+    let demandId = req.params.demandId;
+    
     Service.finishService(serviceId)
         .then((doneTime) => {
             res.status(200).json(doneTime)
