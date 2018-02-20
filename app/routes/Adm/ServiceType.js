@@ -59,4 +59,4 @@ router.delete('/:serviceTypeId', (req, res) => {
         });
 });
 
-export const ServiceTypeRouter = router;
+export const ServiceTypeAdmRouter = router;

@@ -1,4 +1,5 @@
 import { Pool } from 'config';
+import { Question } from './';
 
 export class ServiceType {
   constructor(serviceTypeId, type, form) {
@@ -42,6 +43,17 @@ export class ServiceType {
         } else {
           throw new Error('Service type does not exist')
         }
+      }).catch((error) => {
+        throw error
+      });
+  }
+
+  static listServiceTypes(){
+    return Pool.query('SELECT * FROM service_type')
+      .then((results) => {
+        return Promise.all(results.map((serviceType) => {
+          return new ServiceType(serviceType.id, serviceType.type)
+        }))
       }).catch((error) => {
         throw error
       });
