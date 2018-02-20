@@ -58,4 +58,17 @@ export class ServiceType {
         throw error
       });
   }
+
+  static getForm(serviceTypeId) {
+    return Pool.query('SELECT form FROM service_type WHERE id = ?', [serviceTypeId])
+      .then((results) => {
+        let form = JSON.parse(results[0].form)
+        let questions = form.questions
+        return Promise.all(questions.map((questionId) => {
+          return new Question().get('id', questionId)
+        }))
+      }).catch((error) => {
+        throw error
+      });
+  }
 }

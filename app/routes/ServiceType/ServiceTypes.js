@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { ServiceType, Question } from '../../models';
+import { ServiceType } from '../../models';
 
 let router = Router();
 
@@ -11,5 +11,16 @@ router.get('/', (req, res) => {
             res.status(200).json({ message: error.message })
         });
 });
+
+router.get('/:serviceTypeId/form', (req, res) => {
+    let serviceTypeId = req.params.serviceTypeId;
+
+    ServiceType.getForm(serviceTypeId)
+        .then((form) => {
+            res.status(200).json(form)
+        }).catch((error) => {
+            res.status(500).json({ message: error.message })
+        })
+})
 
 export const ServiceTypeRouter = router;
