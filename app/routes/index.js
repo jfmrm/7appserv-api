@@ -5,4 +5,5 @@ export { CustomerUserRouter,
 export { DemandRouter,
          QuotationRouter,
          ServiceRouter } from './Demand';
-export { ServiceTypeRouter } from './Adm';
+export { ServiceTypeRouter,
+         QuestionsRouter } from './Adm';

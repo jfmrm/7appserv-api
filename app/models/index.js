@@ -9,3 +9,4 @@ export { ServiceType } from './ServiceType';
 export { Service }     from './Service';
 export { City }        from './City';
 export { Quotation }   from './Quotation';
+export { Question }    from './Question';
