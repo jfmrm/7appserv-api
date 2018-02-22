@@ -1,5 +1,6 @@
 import { Customer, Address, City, Place } from 'models';
 import { Router } from 'express';
+import { uploadCustomerProfilePic } from '../helpers';
 
 let router = Router();
 //creates a new Customer
@@ -21,6 +22,16 @@ router.post('/', (req, res) => {
         res.status(500).json({ message: error.message })
       });
   }
+});
+
+router.post('/:customerId/profile_picture', uploadCustomerProfilePic.single('profilePic'), (error, req, res, next) => {
+  if (error) res.status(500).json({ message: error.message })
+  res.status(201).json({ message: 'success' })
+});
+
+router.patch('/:customerId/profile_picture', uploadCustomerProfilePic.single('profilePic'), (error, req, res, next) => {
+  if (error) res.status(500).json({ message: error.message })
+  res.status(200).json({ message: 'success' })
 });
 
 //from here needs authentication

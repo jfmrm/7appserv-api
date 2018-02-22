@@ -1,5 +1,6 @@
 import { Customer, Pro, ProVIP, Address, City } from 'models';
 import { Router } from 'express';
+import { uploadProProfilePic } from '../helpers';
 
 let router = Router();
 //creates new Pro
@@ -29,6 +30,15 @@ router.post('/', (req, res) => {
   }
 });
 
+router.post(':proId/profile_picture', uploadProProfilePic.single('profilePic'), (error, req, res, next) => {
+  if (error) res.status(500).json({ message: error.message })
+  res.status(201).json({ message: 'success' })
+});
+
+router.patch('/:proId/protile_picture', uploadProProfilePic.single('profilePic'), (error, req, res, next) => {
+  if (error) res.status(500).json({ message: error.message })
+  res.status(200).json({ message: 'success' })
+});
 
 //edit Pro
 router.put('/:proId', (req, res) => {

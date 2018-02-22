@@ -2,6 +2,7 @@ import express from 'express';
 import morgan from 'morgan';
 import bodyparser from 'body-parser';
 import mysql from 'promise-mysql';
+import aws from 'aws-sdk';
 import { CustomerUserRouter,
          ProUserRouter,
          DemandRouter,
@@ -10,6 +11,12 @@ import { CustomerUserRouter,
          ServiceTypeAdmRouter,
          QuestionsRouter,
          ServiceTypeRouter } from 'routes';
+
+let awsConfig = new aws.Config({
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    region: process.env.AWS_REGION
+});
 
 let app = express();
 

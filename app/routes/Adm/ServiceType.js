@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { ServiceType } from '../../models';
+import { uploadServiceTypePic } from '../helpers';
 
 let router = Router();
 
@@ -18,6 +19,16 @@ router.post('/', (req, res) => {
                 res.status(500).json({ message: error.message })
             });
     }
+});
+
+router.post('/', uploadServiceTypePic.single('serviceTypePic'), (error, req, res, next) => {
+    if (error) res.status(500).json({ message: error.message })
+    res.status(201).json({ message: 'success'})
+});
+
+router.patch('/', uploadServiceTypePic.single('serviceTypePic'), (error, req, res, next) => {
+    if (error) res.status(500).json({ message: error.message })
+    res.status(200).json({ message: 'success' })
 });
 
 router.get('/:serviceTypeId', (req, res) => {

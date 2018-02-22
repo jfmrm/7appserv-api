@@ -26,10 +26,13 @@
     "rimraf": "^2.6.2"
   },
   "dependencies": {
+    "aws-sdk": "^2.200.0",
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
     "http": "0.0.0",
     "moment": "^2.20.1",
+    "multer": "^1.3.0",
+    "multer-s3": "^2.7.0",
     "nodemailer": "^4.4.2",
     "nodemon": "^1.14.9",
     "promise-mysql": "^3.1.5"
