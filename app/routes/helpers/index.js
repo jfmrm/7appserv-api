@@ -1,3 +1,4 @@
 export { uploadCustomerProfilePic,
          uploadProProfilePic,
-         uploadServiceTypePic } from './aws';
+         uploadServiceTypePic,
+         getPic } from './aws';

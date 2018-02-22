@@ -1,6 +1,7 @@
 import { Customer, Address, City, Place } from 'models';
 import { Router } from 'express';
-import { uploadCustomerProfilePic } from '../helpers';
+import { uploadCustomerProfilePic,
+         getPic } from '../helpers';
 
 let router = Router();
 //creates a new Customer
@@ -24,13 +25,11 @@ router.post('/', (req, res) => {
   }
 });
 
-router.post('/:customerId/profile_picture', uploadCustomerProfilePic.single('profilePic'), (error, req, res, next) => {
-  if (error) res.status(500).json({ message: error.message })
+router.post('/:customerId/profile_picture', uploadCustomerProfilePic.single('profilePic'), (req, res, next) => {
   res.status(201).json({ message: 'success' })
 });
 
 router.patch('/:customerId/profile_picture', uploadCustomerProfilePic.single('profilePic'), (error, req, res, next) => {
-  if (error) res.status(500).json({ message: error.message })
   res.status(200).json({ message: 'success' })
 });
 
@@ -76,14 +75,18 @@ router.delete('/:customerId', (req, res) => {
 //get customer
 router.get('/:customerId', (req, res) => {
   let customerId = req.params.customerId;
-
-    new Customer().get('id', customerId)
-      .then((customer) => {
-        res.status(200).json(customer)
-      }).catch((error) => {
-        console.log(error)
-        res.status(500).json({ message: error.message })
-      });
+  
+  Promise.all([
+    new Customer().get('id', customerId),
+    getPic('profilePic/customers/', customerId)
+  ]).then((data) => {
+    let customer = data[0]
+    customer.profilePic = data[1]
+    res.status(200).json(customer)
+  }).catch((error) => {
+    console.log(error)
+    res.status(500).json({ message: error.message })
+  });
 });
 
 //Place stuff

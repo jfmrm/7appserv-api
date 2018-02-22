@@ -1,3 +1,4 @@
 export { uploadCustomerProfilePic,
          uploadProProfilePic,
-         uploadServiceTypePic } from './s3';
+         uploadServiceTypePic,
+         getPic } from './s3';

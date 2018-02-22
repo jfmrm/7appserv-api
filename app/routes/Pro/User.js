@@ -1,6 +1,7 @@
 import { Customer, Pro, ProVIP, Address, City } from 'models';
 import { Router } from 'express';
-import { uploadProProfilePic } from '../helpers';
+import { uploadProProfilePic,
+         getPic } from '../helpers';
 
 let router = Router();
 //creates new Pro
@@ -30,13 +31,11 @@ router.post('/', (req, res) => {
   }
 });
 
-router.post(':proId/profile_picture', uploadProProfilePic.single('profilePic'), (error, req, res, next) => {
-  if (error) res.status(500).json({ message: error.message })
+router.post('/:proId/profile_picture', uploadProProfilePic.single('profilePic'), (req, res, next) => {
   res.status(201).json({ message: 'success' })
 });
 
-router.patch('/:proId/protile_picture', uploadProProfilePic.single('profilePic'), (error, req, res, next) => {
-  if (error) res.status(500).json({ message: error.message })
+router.patch('/:proId/profile_picture', uploadProProfilePic.single('profilePic'), (req, res, next) => {
   res.status(200).json({ message: 'success' })
 });
 
@@ -98,8 +97,12 @@ router.get('/:proId', (req, res) => {
   if(!proId) {
     res.status(400).json({ message: 'missing parameters' });
   } else {
-    new Pro().get('id', proId)
-      .then((pro) => {
+    Promise.all([
+      new Pro().get('id', proId),
+      getPic('profilePic/pros/', proId)
+    ]).then((data) => {
+        let pro = data[0]
+        pro.profilePic = data[1]
         res.status(200).json(pro)
       }).catch((error) => {
         res.status(500).json({ message: error.message })

@@ -21,13 +21,11 @@ router.post('/', (req, res) => {
     }
 });
 
-router.post('/', uploadServiceTypePic.single('serviceTypePic'), (error, req, res, next) => {
-    if (error) res.status(500).json({ message: error.message })
+router.post('/:serviceTypeId/picture', uploadServiceTypePic.single('serviceTypePic'), (req, res, next) => {
     res.status(201).json({ message: 'success'})
 });
 
-router.patch('/', uploadServiceTypePic.single('serviceTypePic'), (error, req, res, next) => {
-    if (error) res.status(500).json({ message: error.message })
+router.patch('/:serviceTypeId/picture', uploadServiceTypePic.single('serviceTypePic'), (req, res, next) => {
     res.status(200).json({ message: 'success' })
 });
 
