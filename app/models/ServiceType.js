@@ -2,32 +2,46 @@ import { Pool } from 'config';
 import { Question } from './';
 
 export class ServiceType {
-  constructor(serviceTypeId, type, form) {
-    this.id = serviceTypeId;
-    this.type = type;
-    this.form = form;
+  
+  /**
+   * Constructor for ServiceType
+   * @param {string} type 
+   * @param {object} form 
+   * @param {number} serviceTypeId 
+   * @param {number} referenceCounter 
+   */
+  constructor(type, form, serviceTypeId = null, referenceCounter = 0) {
+    this.id = serviceTypeId
+    this.type = type
+    this.form = form
+    this.referenceCounter = referenceCounter
   }
 
   create() {
-    return Pool.query('INSERT INTO service_type (type, form) VALUES (?, ?)', [this.type, JSON.stringify(this.form)])
+    return Pool.query('INSERT INTO service_type (type, form, reference_counter) VALUES (?, ?)', [this.type, JSON.stringify(this.form), this.referenceCounter])
       .then((results) => {
-        return this.get('id', results.insertId);
+        return this.get('id', results.insertId)
       }).catch((error) => {
         throw error
       });
   }
 
-  get(column, param) {
+  /**
+   * Return ServiceType based on query
+   * @param {string} column representing sql column
+   * @param {string} param representing param to compare to column
+   */
+  static get(column, param) {
     return Pool.query('SELECT * FROM service_type WHERE ' + column + ' = ?', [param])
       .then((results) => {
-        return new ServiceType(results[0].id, results[0].type, JSON.parse(results[0].form))
+        return new ServiceType(results[0].type, JSON.parse(results[0].form), results[0].id, results[0].referenceCounter)
       }).catch((error) => {
         throw error
       });
   }
 
   update() {
-    return Pool.query('UPDATE service_type SET type = ?, form = ? WHERE id = ?', [this.type, JSON.stringify(this.form), this.id])
+    return Pool.query('UPDATE service_type SET type = ?, form = ?, reference_counter WHERE id = ?', [this.type, JSON.stringify(this.form), this.referenceCounter, this.id])
       .then((results) => {
         return this.get('id', this.id)
       }).catch((error) => {
