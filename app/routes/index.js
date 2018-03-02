@@ -1,5 +1,6 @@
 export { ProUserRouter,
-         ProActionsRouter } from './Pro';
+         ProActionsRouter,
+         ProPaymentsRouter } from './Pro';
 export { CustomerUserRouter,
          CustomerActionsRouter } from './Customer';
 export { DemandRouter,
