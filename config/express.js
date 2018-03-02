@@ -3,14 +3,18 @@ import morgan from 'morgan';
 import bodyparser from 'body-parser';
 import mysql from 'promise-mysql';
 import aws from 'aws-sdk';
-import { CustomerUserRouter,
-         ProUserRouter,
-         DemandRouter,
-         QuotationRouter,
-         ServiceRouter,
-         ServiceTypeAdmRouter,
-         QuestionsRouter,
-         ServiceTypeRouter } from 'routes';
+import { 
+    CustomerUserRouter,
+    ProUserRouter,
+    DemandRouter,
+    QuotationRouter,
+    ServiceRouter,
+    ServiceTypeAdmRouter,
+    QuestionsRouter,
+    ServiceTypeRouter,
+    MomentRouter,
+    MomentAdmRouter
+} from 'routes';
 
 let awsConfig = new aws.Config({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -28,10 +32,12 @@ app.use(bodyparser.json());
 app.use('/api/customers/users', CustomerUserRouter);
 app.use('/api/pros/users', ProUserRouter);
 app.use('/api/service_types', ServiceTypeRouter);
+app.use('/api/moments/', MomentRouter);
 app.use('/api/demands', DemandRouter);
 app.use('/api/demands/:demandId/quotations', QuotationRouter);
 app.use('/api/demands/:demandId/services', ServiceRouter);
 app.use('/api/adm/service_types', ServiceTypeAdmRouter);
+app.use('/api/adm/moments', MomentAdmRouter);
 app.use('/api/adm/questions', QuestionsRouter);
 
 export const App = app;

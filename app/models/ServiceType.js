@@ -10,7 +10,7 @@ export class ServiceType {
    * @param {number} serviceTypeId 
    * @param {number} referenceCounter 
    */
-  constructor(type, form, serviceTypeId = null, referenceCounter = 0) {
+  constructor(type, form = {}, serviceTypeId = null, referenceCounter = 0) {
     this.id = serviceTypeId
     this.type = type
     this.form = form
