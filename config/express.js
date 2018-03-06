@@ -12,6 +12,7 @@ import { CustomerUserRouter,
          QuestionsRouter,
          ServiceTypeRouter,
          ProPaymentsRouter } from 'routes';
+import { getPro } from './middlewares';
 
 let awsConfig = new aws.Config({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -28,7 +29,7 @@ app.use(bodyparser.json());
 
 app.use('/api/customers/users', CustomerUserRouter);
 app.use('/api/pros/users', ProUserRouter);
-app.use('/api/pros/payments', ProPaymentsRouter);
+app.use('/api/pros/:proId/payments', getPro, ProPaymentsRouter);
 app.use('/api/service_types', ServiceTypeRouter);
 app.use('/api/demands', DemandRouter);
 app.use('/api/demands/:demandId/quotations', QuotationRouter);
