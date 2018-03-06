@@ -5,4 +5,7 @@ export { uploadCustomerProfilePic,
          
 export { generateClientToken,
          createSubscription,
-         createBraintreeCustomer } from './braintree';
+         createBraintreeCustomer,
+         findBraintreeCustomer,
+         updateSubscription,
+         cancelSubscription } from './braintree';

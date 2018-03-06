@@ -1,53 +1,72 @@
 import { Router } from 'express';
+import { Pro } from '../../models';
 import { generateClientToken,
          createSubscription,
-         createBraintreeCustomer } from '../helpers';
-import { Pro } from '../../models';
+         createBraintreeCustomer,
+         findBraintreeCustomer,
+         updateSubscription,
+         cancelSubscription } from '../helpers';
 
 let router = Router();
 
-router.get('/client_token', (req, res) => {
-    generateClientToken().then((token) => {
-        res.status(200).json({ token: token.clientToken })
-    }).catch((error) => {
-        res.status(500).json({ message: error.message })
-    });
-})
-
-router.post('/:proId/checkout', (req, res) => {
-    let proId = req.params.proId
+router.post('/', (req, res) => {
+    let pro = req.pro;
     let paymentMethodNonce = req.body.paymentMethodNonce;
     let planId = req.body.planId;
 
     if (!planId) {
         res.status(400).json({ message: "missing parameters" })
     } else {
-        new Pro().get('id', proId)
-            .then((pro) => {
-                return createBraintreeCustomer(pro.firstName, pro.lastName, proId, paymentMethodNonce)
-            }).then((result) => {
+        createBraintreeCustomer(pro.firstName, pro.lastName, pro.id, paymentMethodNonce)
+            .then((result) => {
                 let paymentMethodToken = result.customer.paymentMethods[0].token
-                return createSubscription(paymentMethodToken, planId)
+                return createSubscription(paymentMethodToken, planId, 6)
             }).then((result) => {
-                console.log(result)
                 res.status(200).json(result)
             }).catch((error) => {
-                console.log(error)
-                res.status(500).json(error)
+                res.status(500).json({message: error.message})
             })
     }
 })
 
+router.patch('/', (req, res) => {
+    let pro = req.pro;
+    let planId = req.body.planId;
 
-router.post('/confirm', (req, res) => {
-    let token = req.body.token
-    let planId = req.body.planId
+    if (!planId) {
+        res.status(400).json({ message: "missing parameters" })
+    } else {
+        findBraintreeCustomer(pro.id)
+            .then((customer) => {
+                let subscriptionId = customer.paymentMethods[0].subscriptions[0].transactions[0].subscriptionId
+                let paymentMethodToken = customer.paymentMethods[0].token;
+                
+                updateSubscription(subscriptionId, planId, paymentMethodToken)
+                    .then((response) => {
+                        res.status(200).json(response.success)
+                    }).catch((error) => {
+                        res.status(500).json({ message: error.message })
+                    })
+            }).catch((error) => {
+                res.status(500).json({ message: "this user does not have a subscription"})
+            })
+    }
+})
 
-    createSubscription(token, planId).then((subscription) => {
-        res.status(200).json(subscription)
-    }).catch((error) => {
-        res.status(500).json(error)
-    })
+router.delete('/', (req, res) => {
+    let pro = req.pro
+    findBraintreeCustomer(pro.id)
+        .then((customer) => {
+            let subscriptionId = customer.paymentMethods[0].subscriptions[0].transactions[0].subscriptionId
+            cancelSubscription(subscriptionId)
+                .then((response) => {
+                    res.status(200).json(response.success)
+                }).catch((error) => {
+                    res.status(500).json(error)
+                })
+        }).catch((error) => { 
+            res.status(500).json({ message: "this user does not have a subscription"})
+        })
 })
 
 export const ProPaymentsRouter = router;

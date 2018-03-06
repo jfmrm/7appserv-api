@@ -1,7 +1,8 @@
 import { Customer, Pro, ProVIP, Address, City } from 'models';
 import { Router } from 'express';
 import { uploadProProfilePic,
-         getPic } from '../helpers';
+         getPic,
+         generateClientToken } from '../helpers';
 
 let router = Router();
 //creates new Pro
@@ -121,5 +122,13 @@ router.get('/vip/:cityId', (req, res) => {
       res.status(500).json({ message: error.message })
     });
 });
+
+router.get('/payments/client_token', (req, res) => {
+  generateClientToken().then((token) => {
+      res.status(200).json({ token: token.clientToken })
+  }).catch((error) => {
+      res.status(500).json({ message: error.message })
+  });
+})
 
 export const ProUserRouter = router;

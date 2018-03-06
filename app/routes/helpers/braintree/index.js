@@ -9,6 +9,13 @@ export function generateClientToken() {
     })
 }
 
+/**
+ * 
+ * @param {String} firstName 
+ * @param {String} lastName 
+ * @param {Number} proId 
+ * @param {String} paymentMethodNonce 
+ */
 export function createBraintreeCustomer(firstName, lastName, proId, paymentMethodNonce) {
     return new Promise((resolve, reject) => {
         BraintreeGateway.customer.create({
@@ -24,14 +31,72 @@ export function createBraintreeCustomer(firstName, lastName, proId, paymentMetho
     })
 }
 
-export function createSubscription(token, planId) {
+/**
+ * 
+ * @param {Number} proId 
+ */
+export function findBraintreeCustomer(proId) {
+    return new Promise((resolve, reject) => {
+        BraintreeGateway.customer.find(proId.toString(), (error, customer) => {
+            if (error) reject(error)
+            resolve(customer)
+        })
+    })
+}
+
+/**
+ * 
+ * @param {String} token 
+ * @param {String} planId 
+ * @param {Number} proId 
+ */
+export function createSubscription(token, planId, proId) {
     return new Promise((resolve, reject) => {
         BraintreeGateway.subscription.create({
             paymentMethodToken: token,
-            planId: planId
+            planId: planId,
+            id: proId
         }, (error, response) => {
             if (error) reject(error)
             if (response.success == false) reject(response)
+            resolve(response)
+        })
+    })
+}
+
+/**
+ * 
+ * @param {String} subscriptionId 
+ * @param {Number} planId 
+ * @param {String} paymentMethodToken 
+ */
+export function updateSubscription(subscriptionId, planId, paymentMethodToken) {
+    return new Promise((resolve, reject) => {
+        let price;
+        if(planId == "vip") price = "60.00"
+        else price = "30.00"
+
+        BraintreeGateway.subscription.update(subscriptionId, {
+            planId,
+            paymentMethodToken,
+            price
+        }, (error, response) => {
+            if (error) reject(error)
+            if (response.success == false) reject(response)
+            resolve(response)
+        })
+    })
+}
+
+/**
+ * 
+ * @param {String} subscriptionId 
+ */
+export function cancelSubscription(subscriptionId) {
+    return new Promise((resolve, reject) => {
+        BraintreeGateway.subscription.cancel(subscriptionId, (error, response) => {
+            if (error) reject(error)
+            if(response.success == false) reject(response)
             resolve(response)
         })
     })

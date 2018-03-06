@@ -89,6 +89,7 @@ router.patch('/visualize', (req, res) => {
 });
   
 router.patch('/:quotationId/accept', (req, res) => {
+    console.log(req.params)
     let demandId = req.params.demandId;
     let quotationId = req.params.quotationId;
 
