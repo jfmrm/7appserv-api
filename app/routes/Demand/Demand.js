@@ -78,15 +78,14 @@ router.put('/:demandId', (req, res) => {
       }).then((demand) => {
         res.status(200).json(demand)
       }).catch((error) => {
-        console.log(error)
         res.status(500).json({ message: error.message })
       });
     }
 });
   
   //delete demand
-router.delete('/', (req, res) => {
-    let demandId = req.query.demandId;
+router.delete('/:demandId', (req, res) => {
+    let demandId = req.params.demandId;
   
     if(!demandId) {
       res.status(400).json({ message: 'missing parameters' });

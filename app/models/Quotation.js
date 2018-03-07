@@ -68,11 +68,11 @@ export class Quotation {
                         FROM quotation
                         INNER JOIN pro ON pro.id = quotation.pro_id
                         INNER JOIN pro_vip ON pro.id
-                        WHERE demand_id = ?`, [demandId]),
+                        WHERE demand_id = ? AND pro.pro_type = 'VIP'`, [demandId]),
             Pool.query(`SELECT pro.first_name, pro.last_name, quotation.value, quotation.id
                         FROM quotation
                         INNER JOIN pro ON pro.id = quotation.pro_id
-                        WHERE demand_id = ?`, [demandId])
+                        WHERE demand_id = ? AND pro.pro_type = 'Standard'`, [demandId])
         ]).then((results) => {
             let vipQuotations = results[0].map((vipQuotation) => {
                 return { 

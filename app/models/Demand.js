@@ -17,7 +17,6 @@ export class Demand {
   }
 
   create() {
-    console.log(this.dueDate)
     return Pool.query('INSERT INTO demand (customer_id, place_id, service_type_id, details, is_public, pro_id) VALUES (?, ?, ?, ?, ?, ?)',
     [this.customer.id, this.place.id, this.serviceType.id, this.details, this.isPublic, this.pro])
       .then((results) => {

@@ -48,7 +48,6 @@ router.delete('/:quotationId', (req, res) => {
     
     new Quotation().get('id', quotationId)
     .then((quotation) => {
-        console.log(quotation)
         return quotation.remove()
     }).then((result) => {
         if (result == true) {
@@ -57,6 +56,7 @@ router.delete('/:quotationId', (req, res) => {
             res.status(500).json({ message: "Could not remove this quotation" })
         }
     }).catch((error) => {
+        console.log(error)
         res.status(500).json({ message: error.message })
     });
 })

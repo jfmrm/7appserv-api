@@ -36,8 +36,8 @@ export class Place {
             place.address = address
             return place
           })
-      }).catch(() => {
-        throw new Error('This place does not exist')
+      }).catch((error) => {
+        throw error
       });
   }
 
