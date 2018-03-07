@@ -5,10 +5,13 @@ import { generateClientToken,
          createBraintreeCustomer,
          findBraintreeCustomer,
          updateSubscription,
-         cancelSubscription } from '../helpers';
+         cancelSubscription,
+         createPaymentMethod } from '../helpers';
+import { BraintreeGateway } from '../../../config';
 
 let router = Router();
 
+// first payment
 router.post('/', (req, res) => {
     let pro = req.pro;
     let paymentMethodNonce = req.body.paymentMethodNonce;
@@ -20,7 +23,7 @@ router.post('/', (req, res) => {
         createBraintreeCustomer(pro.firstName, pro.lastName, pro.id, paymentMethodNonce)
             .then((result) => {
                 let paymentMethodToken = result.customer.paymentMethods[0].token
-                return createSubscription(paymentMethodToken, planId, 6)
+                return createSubscription(paymentMethodToken, planId)
             }).then((result) => {
                 res.status(200).json(result)
             }).catch((error) => {
@@ -29,6 +32,21 @@ router.post('/', (req, res) => {
     }
 })
 
+router.post('/subscribe', (req, res) => {
+    let pro = req.pro;
+    let planId = req.body.planId;
+
+    findBraintreeCustomer(pro.id)
+        .then((customer) => {
+            return createSubscription(customer.paymentMethods[0].token, planId)
+        }).then((subscription) => {
+            res.status(200).json({ success: true })
+        }).catch((error) => {
+            res.status(500).json(error)
+        })
+})
+
+//updates plan (vip or standard)
 router.patch('/', (req, res) => {
     let pro = req.pro;
     let planId = req.body.planId;
@@ -53,6 +71,7 @@ router.patch('/', (req, res) => {
     }
 })
 
+//cancel subscription but do not delete Braintree customer
 router.delete('/', (req, res) => {
     let pro = req.pro
     findBraintreeCustomer(pro.id)

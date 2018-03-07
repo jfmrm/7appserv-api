@@ -35,6 +35,22 @@ export function createBraintreeCustomer(firstName, lastName, proId, paymentMetho
  * 
  * @param {Number} proId 
  */
+export function createPaymentMethod(proId) {
+    return new Promise((resolve, reject) => {
+        BraintreeGateway.paymentMethod.create({
+            customerId: proId,
+            paymentMethodNonce: "fake-valid-nonce"
+        }, (error, response) => {
+            if (error) reject(error)
+            if (response.success == false) reject(response)
+            resolve(response)
+        })
+    })
+}
+/**
+ * 
+ * @param {Number} proId 
+ */
 export function findBraintreeCustomer(proId) {
     return new Promise((resolve, reject) => {
         BraintreeGateway.customer.find(proId.toString(), (error, customer) => {
@@ -50,12 +66,11 @@ export function findBraintreeCustomer(proId) {
  * @param {String} planId 
  * @param {Number} proId 
  */
-export function createSubscription(token, planId, proId) {
+export function createSubscription(paymentMethodToken, planId) {
     return new Promise((resolve, reject) => {
         BraintreeGateway.subscription.create({
-            paymentMethodToken: token,
-            planId: planId,
-            id: proId
+            paymentMethodToken,
+            planId,
         }, (error, response) => {
             if (error) reject(error)
             if (response.success == false) reject(response)

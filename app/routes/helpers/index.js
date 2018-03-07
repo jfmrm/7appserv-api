@@ -8,4 +8,5 @@ export { generateClientToken,
          createBraintreeCustomer,
          findBraintreeCustomer,
          updateSubscription,
-         cancelSubscription } from './braintree';
+         cancelSubscription,
+         createPaymentMethod } from './braintree';
