@@ -2,8 +2,8 @@ import { Pool } from 'config';
 import { Address } from 'models';
 
 export class Place {
-  constructor(costumerId, size, bathrooms, address, answers, placeId) {
-    this.costumerId = costumerId;
+  constructor(customerId, size, bathrooms, address, answers, placeId) {
+    this.customerId = customerId;
     this.size = size; //feet squered
     this.bathrooms = bathrooms;
     this.address = address;
@@ -14,8 +14,8 @@ export class Place {
   create() {
     return this.address.create()
       .then((address) => {
-        let results = Pool.query('INSERT INTO place (costumer_id, size, bathrooms, address_id, answers) VALUES (?, ?, ?, ?, ?)',
-          [this.costumerId, this.size, this.bathrooms, address.id, JSON.stringify(this.answers)])
+        let results = Pool.query('INSERT INTO place (customer_id, size, bathrooms, address_id, answers) VALUES (?, ?, ?, ?, ?)',
+          [this.customerId, this.size, this.bathrooms, address.id, JSON.stringify(this.answers)])
         return { address: address, results: results }
       }).then(({ address: address, results: results }) => {
         return results.then((results) => {
@@ -29,7 +29,7 @@ export class Place {
   get(column, param) {
     return Pool.query('SELECT * FROM place WHERE ' + column + ' = ?', [param])
       .then((results) => {
-        return new Place(results[0].costumer_id, results[0].size, results[0].bathrooms, results[0].address_id, JSON.parse(results[0].answers), results[0].id)
+        return new Place(results[0].customer_id, results[0].size, results[0].bathrooms, results[0].address_id, JSON.parse(results[0].answers), results[0].id)
       }).then((place) => {
         return new Address().get('id', place.address)
           .then((address) => {
@@ -67,9 +67,9 @@ export class Place {
       });
   }
 
-  getListByCustomerId(costumerId) {
+  getListByCustomerId(customerId) {
     //queries all Places from a customer
-    return Pool.query('SELECT id FROM place WHERE costumer_id = ?', [costumerId])
+    return Pool.query('SELECT id FROM place WHERE customer_id = ?', [customerId])
       .then((results) => {
         return Promise.all(results.map((place) => {
           return this.get('id', place.id)

@@ -18,9 +18,9 @@ router.post('/public', (req, res) => {
     } else {
         //retrieves demand dependecies
         Promise.all([
-        new Customer().get('id', customerId),
-        new Place().get('id', placeId),
-        new ServiceType().get('id', serviceTypeId)
+          new Customer().get('id', customerId),
+          new Place().get('id', placeId),
+          new ServiceType().get('id', serviceTypeId)
         ]).then((results) => {
             return new Demand(results[0], results[1], results[2], dueDate, details, isPublic).create()
         }).then((demand) => {

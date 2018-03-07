@@ -6,7 +6,7 @@ let router = Router();
 //Create quotation
 router.post('/', (req, res) => {
     let proId = req.body.proId;
-    let demandId = req.body.demandId;
+    let demandId = req.demand.id;
     let value = req.body.value;
     let dueDate = req.body.dueDate;
     let details = req.body.details;
@@ -24,11 +24,11 @@ router.post('/', (req, res) => {
 });
   
   //update quotations
-router.put('/', (req, res) => {
+router.put('/:quotationId', (req, res) => {
     let value = req.body.value;
     let dueDate = req.body.dueDate;
     let details = req.body.details;
-    let quotationId = req.body.quotationId;
+    let quotationId = req.params.quotationId;
     
     if(!value || !dueDate || !details || !quotationId) {
         res.status(400).json({ message: 'missing parameters' })
@@ -76,9 +76,9 @@ router.delete('/:quotationId', (req, res) => {
   
   
 router.patch('/visualize', (req, res) => {
-    let demandId = req.params.demandId;
+    let demandId = req.demand;
   
-    new Quotation().visualize(demandId)
+    new Quotation().visualize(demand.id)
       .then((response) => {
         if (response == true) {
           res.status(200).json({ message: "Success"})
@@ -89,8 +89,6 @@ router.patch('/visualize', (req, res) => {
 });
   
 router.patch('/:quotationId/accept', (req, res) => {
-    console.log(req.params)
-    let demandId = req.params.demandId;
     let quotationId = req.params.quotationId;
 
     new Quotation().accept(quotationId)

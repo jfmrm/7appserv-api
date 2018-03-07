@@ -68,8 +68,7 @@ export class Demand {
       }).then((demand) => {
         return demand
       }).catch((error) => {
-        console.log(error)
-        throw new Error('This demand does not exists, or has been deleted')
+        throw error
       });
   }
 

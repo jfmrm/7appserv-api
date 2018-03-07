@@ -54,7 +54,7 @@ router.put('/:proId', (req, res) => {
   if(!firstName || !lastName || !email || !contactNumber || !address || !hasInsurance || !actionRadious) {
     res.status(400).json({ message: 'missing parameters' });
   } else {
-    new Pro().get('email', email)
+    new Pro().get('id', proId)
       .then((pro) => {
         return new Address(address.addressLine, address.addressLine2, address.district, null, address.zipCode, address.latitude, address.longitude, pro.address.id)
       }).then((newAddress) => {
@@ -64,7 +64,7 @@ router.put('/:proId', (req, res) => {
             return newAddress
           })
       }).then((address) => {
-        return new Pro(firstName, lastName, email, null, contactNumber, address, hasInsurance, actionRadious).update()
+        return new Pro(firstName, lastName, email, null, contactNumber, address, hasInsurance, actionRadious, null, null, null, proId).update()
       }).then((pro) => {
         res.status(200).json(pro)
       }).catch((error) => {
@@ -74,8 +74,8 @@ router.put('/:proId', (req, res) => {
 });
 
 //delete Pro
-router.delete('/', (req, res) => {
-  let proId = req.query.proId;
+router.delete('/:proId', (req, res) => {
+  let proId = req.params.proId;
 
   if(!proId) {
     res.status(400).json({ message: "missing parameters" })

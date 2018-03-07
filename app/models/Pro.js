@@ -41,12 +41,12 @@ export class Pro extends User {
   }
 
   update() {
-    let pro = Pool.query('UPDATE pro SET first_name = ?, last_name = ?, has_insurance = ?, contact_number = ?, action_radious = ? WHERE email = ?',
-    [this.firstName, this.lastName, this.hasInsurance, this.contactNumber, this.actionRadious, this.email])
+    let pro = Pool.query('UPDATE pro SET first_name = ?, last_name = ?, has_insurance = ?, contact_number = ?, action_radious = ? WHERE id = ?',
+    [this.firstName, this.lastName, this.hasInsurance, this.contactNumber, this.actionRadious, this.id])
     let address = this.address.update()
     return Promise.all([pro, address])
       .then((result) => {
-        return this.get('email', this.email)
+        return this.get('id', this.id)
       }).catch((error) => {
         throw error
       });

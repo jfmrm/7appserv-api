@@ -14,7 +14,7 @@ export class Customer extends User {
       .then((results) => {
         return this.get('id', results.insertId)
       }).catch((error) => {
-        throw new Error('This email is already registered')
+        throw error
       });
   }
 
@@ -31,7 +31,8 @@ export class Customer extends User {
         customer.places = places;
         return customer;
       }).catch((error) => {
-        throw new Error('Could not find this customer')
+        console.log(error)
+        throw error
       });
   }
 
