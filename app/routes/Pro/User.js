@@ -11,18 +11,18 @@ router.post('/', (req, res) => {
   let lastName = req.body.lastName;
   let email = req.body.email;
   let password = req.body.password;
-  let contactNumber = req.body.contactNumber;
+  let birthDate = req.body.birthDate;
   let address = req.body.address;
   let hasInsurance = req.body.hasInsurance;
   let actionRadious = req.body.actionRadious;
 
-  if (!firstName || !lastName || !email || !password || !contactNumber || !address || !hasInsurance || !actionRadious) {
+  if (!firstName || !lastName || !email || !password || !birthDate || !address || !hasInsurance || !actionRadious) {
     res.status(400).json({ message: 'missing parameters' });
   } else {
     new City().get('id', address.cityId)
       .then((city) => {
         let addr = new Address(address.addressLine, address.addressLine2, address.district, city, address.zipCode, address.latitude, address.longitude)
-        let pro = new Pro(firstName, lastName, email, password, contactNumber, addr, hasInsurance, actionRadious);
+        let pro = new Pro(firstName, lastName, email, password, birthDate, addr, hasInsurance, actionRadious);
         return pro.create()
       }).then((pro) => {
         res.status(201).json(pro)
@@ -40,18 +40,29 @@ router.patch('/:proId/profile_picture', uploadProProfilePic.single('profilePic')
   res.status(200).json({ message: 'success' })
 });
 
+router.get('/:proId/profile_picture', (req, res) => {
+  let proId = req.params.proId;
+
+  getPic('profilePic/pros/', proId)
+    .then((profilePic) => {
+      res.status(200).json(profilePic);
+    }).catch((error) => {
+      res.status(500).json({ message: error });
+    });
+});
+
 //edit Pro
 router.put('/:proId', (req, res) => {
   let proId = req.params.proId;
   let firstName = req.body.firstName;
   let lastName = req.body.lastName;
   let email = req.body.email;
-  let contactNumber = req.body.contactNumber;
+  let birthDate = req.body.birthDate;
   let address = req.body.address;
   let hasInsurance = req.body.hasInsurance;
   let actionRadious = req.body.actionRadious;
 
-  if(!firstName || !lastName || !email || !contactNumber || !address || !hasInsurance || !actionRadious) {
+  if(!firstName || !lastName || !email || !birthDate || !address || !hasInsurance || !actionRadious) {
     res.status(400).json({ message: 'missing parameters' });
   } else {
     new Pro().get('id', proId)
@@ -64,7 +75,7 @@ router.put('/:proId', (req, res) => {
             return newAddress
           })
       }).then((address) => {
-        return new Pro(firstName, lastName, email, null, contactNumber, address, hasInsurance, actionRadious, null, null, null, proId).update()
+        return new Pro(firstName, lastName, email, null, birthDate, address, hasInsurance, actionRadious, null, null, null, proId).update()
       }).then((pro) => {
         res.status(200).json(pro)
       }).catch((error) => {
@@ -98,12 +109,8 @@ router.get('/:proId', (req, res) => {
   if(!proId) {
     res.status(400).json({ message: 'missing parameters' });
   } else {
-    Promise.all([
-      new Pro().get('id', proId),
-      getPic('profilePic/pros/', proId)
-    ]).then((data) => {
-        let pro = data[0]
-        pro.profilePic = data[1]
+    new Pro().get('id', proId)
+      .then((pro) => {
         res.status(200).json(pro)
       }).catch((error) => {
         res.status(500).json({ message: error.message })

@@ -10,12 +10,12 @@ router.post('/', (req, res) => {
   let lastName = req.body.lastName;
   let email = req.body.email;
   let password = req.body.password;
-  let contactNumber = req.body.contactNumber;
+  let birthDate = req.body.birthDate;
 
-  if(!firstName || !lastName || !email || !password || !contactNumber) {
+  if(!firstName || !lastName || !email || !password || !birthDate) {
     res.status(400).json({ message: 'missing arguments'});
   } else {
-    let customer = new Customer(firstName, lastName, email, password, contactNumber);
+    let customer = new Customer(firstName, lastName, email, password, birthDate);
     customer.create()
       .then((customer) => {
         res.status(201).json(customer)
@@ -50,12 +50,12 @@ router.put('/:customerId', (req, res) => {
   let firstName = req.body.firstName;
   let lastName = req.body.lastName;
   let email = req.body.email;
-  let contactNumber = req.body.contactNumber;
+  let birthDate = req.body.birthDate;
 
-  if(!firstName || !lastName || !email || !contactNumber) {
+  if(!firstName || !lastName || !email || !birthDate) {
     res.status(400).json({ message: 'missing parameters' });
   } else {
-    new Customer(firstName, lastName, email, null, contactNumber, customerId).update()
+    new Customer(firstName, lastName, email, null, birthDate, customerId).update()
       .then((customer) => {
         res.status(200).json(customer)
       }).catch((error) => {
