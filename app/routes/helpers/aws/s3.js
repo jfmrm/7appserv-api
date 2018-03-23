@@ -54,7 +54,6 @@ export function getPic(path, proId) {
       Key: path + proId + '.jpg'
     }, (error, data) => {
       if (error) reject(error)
-      console.log(data)
       resolve(data)
     })
   })
