@@ -7,5 +7,7 @@ export { DemandRouter,
          QuotationRouter,
          ServiceRouter } from './Demand';
 export { ServiceTypeAdmRouter,
-         QuestionsRouter } from './Adm';
+         QuestionsRouter,
+         MomentAdmRouter } from './Adm';
 export { ServiceTypeRouter } from './ServiceType';
+export { MomentRouter } from './Moment';

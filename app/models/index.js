@@ -6,6 +6,7 @@ export { Address }     from './Address';
 export { Place }       from './Place';
 export { Demand }      from './Demand';
 export { ServiceType } from './ServiceType';
+export { Moment } from './Moment';
 export { Service }     from './Service';
 export { City }        from './City';
 export { Quotation }   from './Quotation';

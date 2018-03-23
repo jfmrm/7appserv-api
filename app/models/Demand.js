@@ -13,19 +13,23 @@ export class Demand {
     this.lastModified = lastModified;
     this.isPublic = isPublic;
     this.pro = pro;
-
   }
 
   create() {
     return Pool.query('INSERT INTO demand (customer_id, place_id, service_type_id, details, is_public, pro_id) VALUES (?, ?, ?, ?, ?, ?)',
     [this.customer.id, this.place.id, this.serviceType.id, this.details, this.isPublic, this.pro])
       .then((results) => {
+        this.id = results.insertId;
+        return Pool.query('UPDATE service_type SET reference_counter = reference_counter + 1 WHERE id = ?', this.serviceType.id)
+      })
+      .then(res => {
         return Promise.all(this.dueDate.map((dueDate) => {
-          Pool.query('INSERT INTO demand_due_date (demand_id, start, end) VALUES (?, ?, ?)', [results.insertId, dueDate[0], dueDate[1]])
+          Pool.query('INSERT INTO demand_due_date (demand_id, start, end) VALUES (?, ?, ?)', [this.id, dueDate[0], dueDate[1]])
         })).then(() => {
-          return this.get('id', results.insertId)
+          return this.get('id', this.id)
         })
-      }).catch((error) => {
+      })
+      .catch((error) => {
         throw error
       });
   }
