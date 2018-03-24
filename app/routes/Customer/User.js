@@ -99,17 +99,16 @@ router.get('/:customerId', (req, res) => {
 //crate Place
 router.post('/:customerId/places', (req, res) => {
   let customerId = req.params.customerId;
-  let size = req.body.size;
-  let bathrooms = req.body.bathrooms;
   let address = req.body.address;
+  let name = req.body.name;
 
-  if(!customerId || !size || !bathrooms || !address) {
+  if(!customerId || !address) {
     res.status(400).json({ message: "missing parameters" });
   } else {
     new City().get('id', address.cityId)
       .then((city) => {
         let addr = new Address(address.addressLine, address.addressLine2, address.district, city, address.zipCode, address.latitude, address.longitude, address.id)
-        return new Place(customerId, size, bathrooms, addr).create()
+        return new Place(customerId, addr, null, name).create()
       }).then((place) => {
         res.status(201).json(place)
       }).catch((error) => {
@@ -119,30 +118,7 @@ router.post('/:customerId/places', (req, res) => {
   }
 });
 
-router.put('/:customerId/places', (req, res) => {
-  let customer = req.body.customerId;
-  let placeId = req.body.placeId;
-  let size = req.body.size;
-  let bathrooms = req.body.bathrooms;
-  let address = req.body.address;
-
-  if(!size || !bathrooms || !address || !placeId) {
-    res.status(400).json({ message: "missing parameters" })
-  } else {
-    new City().get('id', address.cityId)
-      .then((city) => {
-        return new Address(address.addressLine, address.addressLine2, address.district, city, address.zipCode, address.latitude, address.longitude, address.addressId).update()
-      }).then((address) => {
-        return new Place(null, size, bathrooms, address, placeId).update()
-      }).then((place) => {
-        res.status(200).json(place)
-      }).catch((error) => {
-        res.status(500).json({ message: error.message })
-      });
-  }
-});
-
-//update place
+//update answers
 router.patch('/:customerId/places/:placeId', (req, res) => {
   let placeId = req.params.placeId;
   let answers = req.body.answers;
