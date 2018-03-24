@@ -34,7 +34,7 @@ export class ServiceType {
   static get(column, param) {
     return Pool.query('SELECT * FROM service_type WHERE ' + column + ' = ?', [param])
       .then((results) => {
-        return new ServiceType(results[0].type, JSON.parse(results[0].form), results[0].id, results[0].referenceCounter)
+        return new ServiceType(results[0].type, JSON.parse(results[0].form), results[0].id, results[0].reference_counter)
       }).catch((error) => {
         throw error
       });
@@ -66,7 +66,7 @@ export class ServiceType {
     return Pool.query('SELECT * FROM service_type')
       .then((results) => {
         return Promise.all(results.map((serviceType) => {
-          return new ServiceType(serviceType.id, serviceType.type)
+          return new ServiceType(serviceType.type, JSON.parse(serviceType.form), serviceType.id, serviceType.reference_counter)
         }))
       }).catch((error) => {
         throw error

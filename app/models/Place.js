@@ -89,4 +89,13 @@ export class Place {
         throw error
       }));
   }
+
+  static listPlaces(customerId) {
+    return Pool.query('SELECT * FROM place WHERE customer_id = ?', [customerId])
+      .then((results) => {
+        return Promise.all(results.map((place) => {
+          return new Place(place.id, place.customer_id, place.size, place.bathrooms, place.address_id, JSON.parse(place.answers))
+        }));
+      });
+  }
 }

@@ -20,12 +20,13 @@ router.post('/public', (req, res) => {
         Promise.all([
           new Customer().get('id', customerId),
           new Place().get('id', placeId),
-          new ServiceType().get('id', serviceTypeId)
+          ServiceType.get('id', serviceTypeId)
         ]).then((results) => {
             return new Demand(results[0], results[1], results[2], dueDate, details, isPublic).create()
         }).then((demand) => {
             res.status(201).json(demand)
         }).catch((error) => {
+            console.log(error)
             res.status(500).json({ message: error.message })
         });
     }

@@ -36,9 +36,11 @@ router.patch('/:customerId/profile_picture', uploadCustomerProfilePic.single('pr
 router.get('/:customerId/profile_picture', (req, res) => {
   let customerId = req.params.customerId;
 
-  getPic('profilePic/customers/', customerId)
+  getPic('profilePic/customers', customerId)
     .then((profilePic) => {
       res.status(200).json(profilePic);
+    }).catch((error) => {
+      res.status(500).json({ message: error });
     });
 });
 
@@ -135,10 +137,22 @@ router.put('/:customerId/places', (req, res) => {
       }).then((place) => {
         res.status(200).json(place)
       }).catch((error) => {
-        console.log(error)
         res.status(500).json({ message: error.message })
       });
   }
+});
+
+//update place
+router.patch('/:customerId/places/:placeId', (req, res) => {
+  let placeId = req.params.placeId;
+  let answers = req.body.answers;
+  
+  Place.updateAnswers(placeId, answers)
+    .then((place) => {
+      res.status(200).json(place);
+    }).catch((error) => {
+      res.status(500).json({ message: error.message });
+    });
 });
 
 router.delete('/:customerId/places/:placeId', (req, res) => {
@@ -161,8 +175,8 @@ router.delete('/:customerId/places/:placeId', (req, res) => {
   }
 });
 
-router.get('/:customerId/places', (req, res) => {
-  let placeId = req.query.placeId;
+router.get('/:customerId/places/:placeId', (req, res) => {
+  let placeId = req.params.placeId;
 
   if(!placeId) {
     res.status(400).json({ message: 'missing parameters' })
@@ -174,6 +188,17 @@ router.get('/:customerId/places', (req, res) => {
         res.status(500).json({ message: error.message })
       });
   }
+});
+
+router.get('/:customerId/places', (req, res) => {
+  let customerId = req.params.customerId;
+
+  Place.listPlaces(customerId)
+    .then((places) => {
+      res.status(200).json(places);
+    }).catch((error) => {
+      res.status(500).json({ message: error.message });
+    });
 });
 
 export const CustomerUserRouter = router;

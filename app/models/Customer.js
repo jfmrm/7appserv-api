@@ -31,7 +31,6 @@ export class Customer extends User {
         customer.places = places;
         return customer;
       }).catch((error) => {
-        console.log(error)
         throw error
       });
   }
@@ -58,5 +57,10 @@ export class Customer extends User {
       }).catch((error) => {
         throw error
       });
+  }
+
+  static listProjects(customerId) {
+    return Pool.query(`SELECT service_type.type, COUNT(quotation.demand_id)
+                       `, [customerId])
   }
 }

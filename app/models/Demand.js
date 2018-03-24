@@ -43,7 +43,7 @@ export class Demand {
           return Promise.all([
             new Customer().get('id', demand.customer),
             new Place().get('id', demand.place),
-            new ServiceType().get('id', demand.serviceType),
+            ServiceType.get('id', demand.serviceType),
             demand.getDueDateList()
           ]).then((res) => {
             demand.customer = res[0]
@@ -56,7 +56,7 @@ export class Demand {
           return Promise.all([
             new Customer().get('id', demand.customer),
             new Place().get('id', demand.place),
-            new ServiceType().get('id', demand.serviceType),
+            ServiceType.get('id', demand.serviceType),
             demand.getDueDateList(),
             new ProVIP().get('pro_id', demand.pro)
           ]).then((res) => {

@@ -66,7 +66,7 @@ export class ProVIP extends Pro {
       });
   }
 
-  getProVIPList(cityId) {
+  static getProVIPList(cityId) {
     return Pool.query(`SELECT pro.id, pro_vip.company_name, pro.rate, address.latitude, address.longitude, pro.action_radious
                        FROM pro_vip
                        INNER JOIN pro ON pro.id = pro_vip.pro_id
