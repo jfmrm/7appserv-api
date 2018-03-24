@@ -8,32 +8,30 @@ router.post('/', (req, res) => {
     let proId = req.body.proId;
     let demandId = req.demand.id;
     let value = req.body.value;
-    let dueDate = req.body.dueDate;
     let details = req.body.details;
   
-    if(!proId || !demandId || !value || !dueDate) {
+    if(!proId || !demandId || !value) {
         res.status(400).json({ message: 'missing parameters' });
     } else {
-        new Quotation(proId, demandId, value, dueDate, details).create()
+        new Quotation(proId, demandId, value, details).create()
             .then((quotation) => {
-              res.status(201).json(quotation)
+                res.status(201).json(quotation)
             }).catch((error) => {
-              res.status(500).json({ message: error.message })
+                console.log(error)
+                res.status(500).json({ message: error.message })
             });
     }
 });
   
   //update quotations
-router.put('/:quotationId', (req, res) => {
+router.patch('/:quotationId', (req, res) => {
     let value = req.body.value;
-    let dueDate = req.body.dueDate;
-    let details = req.body.details;
     let quotationId = req.params.quotationId;
-    
-    if(!value || !dueDate || !details || !quotationId) {
+
+    if(!value) {
         res.status(400).json({ message: 'missing parameters' })
     } else {
-        new Quotation(null, null, value, dueDate, details, null, quotationId).update()
+        new Quotation(null, null, value, null, null, quotationId).update()
         .then((quotation) => {
             res.status(200).json(quotation)
         }).catch((error) => {
