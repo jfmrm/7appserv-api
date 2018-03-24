@@ -13,14 +13,15 @@ router.post('/', (req, res) => {
   let password = req.body.password;
   let birthDate = req.body.birthDate;
   let address = req.body.address;
+  let description = req.body.description;
 
-  if (!firstName || !lastName || !email || !password || !birthDate || !address) {
+  if (!firstName || !lastName || !email || !password || !birthDate || !address || !description) {
     res.status(400).json({ message: 'missing parameters' });
   } else {
     new City().get('id', address.cityId)
       .then((city) => {
         let addr = new Address(address.addressLine, address.addressLine2, address.district, city, address.zipCode, address.latitude, address.longitude)
-        let pro = new Pro(firstName, lastName, email, password, birthDate, addr);
+        let pro = new Pro(firstName, lastName, email, password, birthDate, addr, description);
         return pro.create()
       }).then((pro) => {
         res.status(201).json(pro)
@@ -58,8 +59,9 @@ router.put('/:proId', (req, res) => {
   let email = req.body.email;
   let birthDate = req.body.birthDate;
   let address = req.body.address;
+  let description = req.body.description;
 
-  if(!firstName || !lastName || !email || !birthDate || !address) {
+  if(!firstName || !lastName || !email || !birthDate || !address || !description) {
     res.status(400).json({ message: 'missing parameters' });
   } else {
     new Pro().get('id', proId)
@@ -72,11 +74,10 @@ router.put('/:proId', (req, res) => {
             return newAddress
           })
       }).then((address) => {
-        return new Pro(firstName, lastName, email, null, birthDate, address, null, proId).update()
+        return new Pro(firstName, lastName, email, null, birthDate, address, description, null, proId).update()
       }).then((pro) => {
         res.status(200).json(pro)
       }).catch((error) => {
-        console.log(error)
         res.status(500).json({ message: error.message })
       });
   }

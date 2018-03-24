@@ -30,6 +30,9 @@ app.use(morgan('dev'));
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json());
 
+app.get('/health', (req, res) => {
+    res.status(200).json('im alive');
+});
 app.use('/api/customers/users', CustomerUserRouter);
 app.use('/api/pros/users', ProUserRouter);
 app.use('/api/pros/:proId/payments', getPro, ProPaymentsRouter);
