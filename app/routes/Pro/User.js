@@ -1,4 +1,4 @@
-import { Customer, Pro, ProVIP, Address, City } from 'models';
+import { Customer, Pro, ProVIP, Address, City, Service } from 'models';
 import { Router } from 'express';
 import { uploadProProfilePic,
          getPic,
