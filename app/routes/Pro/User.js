@@ -137,7 +137,7 @@ router.get('/payments/client_token', (req, res) => {
   });
 })
 
-router.get('/:proId', (req, res) => {
+router.get('/:proId/projects', (req, res) => {
   let proId = req.params.proId;
 
   Promise.all([
