@@ -66,16 +66,17 @@ export class Customer extends User {
                   INNER JOIN customer ON customer.id = demand.customer_id
                   WHERE demand.customer_id = ? AND demand.is_open = true
                   GROUP BY demand.id`, [customerId]),
-      Pool.query(`SELECT demand.id ,service_type.type as offers, demand.last_modified, demand.is_open FROM demand
+      Pool.query(`SELECT demand.id, service_type.type, demand.last_modified, demand.is_open FROM demand
                   INNER JOIN service_type ON service_type.id = demand.service_type_id
                   INNER JOIN customer ON customer.id = demand.customer_id
                   WHERE demand.customer_id = ? AND demand.is_open = false
-                  GROUP BY demand.id`),
-      Pool.query(`SELECT demand.id ,service_type.type as offers, demand.last_modified, service.is_done, service.done_time FROM demand
+                  GROUP BY demand.id`, [customerId]),
+      Pool.query(`SELECT demand.id, service_type.type, demand.last_modified, service.done_time FROM demand
                   INNER JOIN service_type ON service_type.id = demand.service_type_id
                   INNER JOIN customer ON customer.id = demand.customer_id
-                  WHERE demand.customer_id = ? AND demand.is_open = false
-                  GROUP BY demand.id`)
+                  INNER JOIN service ON service.demand_id = demand.id
+                  WHERE demand.customer_id = 13 AND demand.is_open = false AND service.is_done = true
+                  GROUP BY demand.id`, [customerId])
     ]).then((data) => {
       let projectsList = {
         openDemands: data[0],

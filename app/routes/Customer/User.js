@@ -177,4 +177,16 @@ router.get('/:customerId/places', (req, res) => {
     });
 });
 
+router.get('/:customerId/projects', (req, res) => {
+  let customerId = req.params.customerId;
+
+  Customer.listProjects(customerId)
+    .then((projectsList) => {
+      res.status(200).json(projectsList)
+    }).catch((error) => {
+      console.log(error)
+      res.status(500).json({ message: error })
+    });
+});
+
 export const CustomerUserRouter = router;
