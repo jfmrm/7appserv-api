@@ -97,4 +97,24 @@ export class Service extends Demand {
       });
   }
 
+  static listServices(proId, dueDate) {
+    return Pool.query(`SELECT service.id, customer.first_name, customer.last_name, service_type.type 
+                       FROM demand
+                       INNER JOIN service ON demand.id = service.demand_id
+                       INNER JOIN service_type ON service_type.id = demand.service_type_id
+                       INNER JOIN customer ON demand.customer_id = customer.id
+                       WHERE demand.due_date = ?`, [dueDate])
+      .then((results) => {
+        return Promise.all(results.map((serviceListItem) => {
+          return {
+            serviceId: serviceListItem.id,
+            customerFirstName: serviceListItem.first_name,
+            customerLastName: serviceListItem.last_name,
+            serviceType: serviceListItem.type
+          }
+        }));
+      }).catch((error) => {
+        throw error;
+      });
+  }
 }
