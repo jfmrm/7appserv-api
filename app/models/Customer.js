@@ -60,7 +60,32 @@ export class Customer extends User {
   }
 
   static listProjects(customerId) {
-    return Pool.query(`SELECT service_type.type, COUNT(quotation.demand_id)
-                       `, [customerId])
+    return Promise.all([
+      Pool.query(`SELECT demand.id ,service_type.type, (demand.standard_quotations + demand.vip_quotations) as offers, demand.last_modified FROM demand
+                  INNER JOIN service_type ON service_type.id = demand.service_type_id
+                  INNER JOIN customer ON customer.id = demand.customer_id
+                  WHERE demand.customer_id = ? AND demand.is_open = true
+                  GROUP BY demand.id`, [customerId]),
+      Pool.query(`SELECT demand.id ,service_type.type as offers, demand.last_modified, demand.is_open FROM demand
+                  INNER JOIN service_type ON service_type.id = demand.service_type_id
+                  INNER JOIN customer ON customer.id = demand.customer_id
+                  WHERE demand.customer_id = ? AND demand.is_open = false
+                  GROUP BY demand.id`),
+      Pool.query(`SELECT demand.id ,service_type.type as offers, demand.last_modified, service.is_done, service.done_time FROM demand
+                  INNER JOIN service_type ON service_type.id = demand.service_type_id
+                  INNER JOIN customer ON customer.id = demand.customer_id
+                  WHERE demand.customer_id = ? AND demand.is_open = false
+                  GROUP BY demand.id`)
+    ]).then((data) => {
+      let projectsList = {
+        openDemands: data[0],
+        closedDemands: data[1],
+        finishedServices: data[2]
+      }
+      return projectsList
+    }).catch((error) => {
+      throw error
+    });
+
   }
 }

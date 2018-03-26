@@ -137,4 +137,24 @@ router.get('/payments/client_token', (req, res) => {
   });
 })
 
+router.get('/:proId', (req, res) => {
+  let proId = req.params.proId;
+
+  Promise.all([
+      Service.listServices(proId, 'Next few days'),
+      Service.listServices(proId, 'Next week'),
+      Service.listServices(proId, 'Next month')
+  ]).then((data) => {
+      let serviceList = {
+          nextFewDays: data[0],
+          nextWeek: data[1],
+          nextMonth: data[2]
+      }
+      res.status(200).json(serviceList)
+  }).catch((error) => {
+      console.log(error)
+      res.status(500).json({ message: error })
+  });
+});
+
 export const ProUserRouter = router;
