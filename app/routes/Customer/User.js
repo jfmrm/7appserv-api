@@ -33,17 +33,6 @@ router.patch('/:customerId/profile_picture', uploadCustomerProfilePic.single('pr
   res.status(200).json({ message: 'success' })
 });
 
-router.get('/:customerId/profile_picture', (req, res) => {
-  let customerId = req.params.customerId;
-
-  getPic('profilePic/customers', customerId)
-    .then((profilePic) => {
-      res.status(200).json(profilePic);
-    }).catch((error) => {
-      res.status(500).json({ message: error });
-    });
-});
-
 //from here needs authentication
 //edit Customer
 //this method doesn't edit the email and the password, theese will have its own methods
@@ -59,6 +48,7 @@ router.put('/:customerId', (req, res) => {
   } else {
     new Customer(firstName, lastName, email, null, birthDate, customerId).update()
       .then((customer) => {
+        customer.pic = `https://s3.amazonaws.com/7appserv/profilePic/customers/${momentId}.jpg`
         res.status(200).json(customer)
       }).catch((error) => {
         res.status(500).json({ message: error.message })
@@ -89,6 +79,7 @@ router.get('/:customerId', (req, res) => {
   
   new Customer().get('id', customerId)
     .then((customer) => {
+      customer.pic = `https://s3.amazonaws.com/7appserv/profilePic/customers/${momentId}.jpg`      
       res.status(200).json(customer)
   }).catch((error) => {
     res.status(500).json({ message: error.message })
@@ -184,7 +175,6 @@ router.get('/:customerId/projects', (req, res) => {
     .then((projectsList) => {
       res.status(200).json(projectsList)
     }).catch((error) => {
-      console.log(error)
       res.status(500).json({ message: error })
     });
 });
