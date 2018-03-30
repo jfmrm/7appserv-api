@@ -66,7 +66,9 @@ export class ServiceType {
     return Pool.query('SELECT * FROM service_type')
       .then((results) => {
         return Promise.all(results.map((serviceType) => {
-          return new ServiceType(serviceType.type, JSON.parse(serviceType.form), serviceType.id, serviceType.reference_counter)
+          let element = new ServiceType(serviceType.type, JSON.parse(serviceType.form), serviceType.id, serviceType.reference_counter)
+          element.pic = `https://s3.amazonaws.com/7appserv/serviceTypePic/${serviceType.id}.jpg`
+          return element
         }))
       }).catch((error) => {
         throw error
