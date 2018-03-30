@@ -125,21 +125,13 @@ export class Moment {
                     return Pool.query('SELECT S.id, S.type FROM service_type AS S, moment_service_type_relationship MS WHERE MS.moment_id = ? AND MS.service_type_id = S.id', moment.id)
                         .then(results => {
                             const serviceTypes = results
-                            return Promise.all(serviceTypes.map((serviceType) => {
-                                return getPic('serviceTypePic/', serviceType.id)
-                            })).then((pics) => {
-                                for (let i = 0; i < serviceTypes.length; i++) {
-                                    const element = serviceTypes[i]
-                                    let serviceType = new ServiceType(element.type, {}, element.id)
-                                    serviceType.pic = pics[i]
-                                    moment.serviceTypes.push(serviceType)
-                                }
-                                return getPic('momentPic/', moment.id)
-                                    .then((pic) => {
-                                        moment.pic = pic;
-                                        return moment
-                                    })
-                            })
+                            for (let i = 0; i < serviceTypes.length; i++) {
+                                const element = serviceTypes[i]
+                                moment.serviceTypes.push(new ServiceType(element.type, {}, element.id))
+                                moment.serviceTypes[moment.serviceTypes.length -1].pic = `https://s3.amazonaws.com/7appserv/serviceTypePic/${element.id}.jpg`
+                            }
+                            moment.pic = `https://s3.amazonaws.com/7appserv/momentPic/${moment.id}.jpg`
+                            return moment
                         })
                         .catch(error => {
                             throw error
