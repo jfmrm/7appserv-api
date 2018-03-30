@@ -36,6 +36,7 @@
     "multer-s3": "^2.7.0",
     "nodemailer": "^4.4.2",
     "nodemon": "^1.14.9",
-    "promise-mysql": "^3.1.5"
+    "promise-mysql": "^3.1.5",
+    "pubnub": "^4.20.2"
   }
 }

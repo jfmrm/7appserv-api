@@ -70,7 +70,7 @@ router.post('/:momentId/service_types/:serviceTypeId', (req, res) => {
 
     Moment.addServiceType(momentId, serviceTypeId)
         .then(ok => {
-            res.status(201).end();
+            res.status(201).json({ message: "success"});
         })
         .catch(error => {
             res.status(500).json({ message: error.message })
@@ -82,7 +82,7 @@ router.delete('/:momentId/service_types/:serviceTypeId', (req, res) => {
     
     Moment.removeServiceType(momentId, serviceTypeId)
         .then(ok => {
-            res.status(200).end();
+            res.status(200).json({ message: "success" });
         })
         .catch(error => {
             res.status(500).json({ message: error.message })

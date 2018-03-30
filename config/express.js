@@ -37,7 +37,7 @@ app.use('/api/customers/users', CustomerUserRouter);
 app.use('/api/pros/users', ProUserRouter);
 app.use('/api/pros/:proId/payments', getPro, ProPaymentsRouter);
 app.use('/api/service_types', ServiceTypeRouter);
-app.use('/api/moments/', MomentRouter);
+app.use('/api/moments', MomentRouter);
 app.use('/api/demands', DemandRouter);
 app.use('/api/demands/:demandId/quotations', getDemand, QuotationRouter);
 app.use('/api/demands/:demandId/services', getDemand, ServiceRouter);
