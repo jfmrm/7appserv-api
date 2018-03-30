@@ -1,5 +1,6 @@
 import { Pool } from 'config';
 import { ServiceType } from './';
+import { getPic } from '../routes/helpers/aws';
 
 export class Moment {
     
@@ -124,11 +125,21 @@ export class Moment {
                     return Pool.query('SELECT S.id, S.type FROM service_type AS S, moment_service_type_relationship MS WHERE MS.moment_id = ? AND MS.service_type_id = S.id', moment.id)
                         .then(results => {
                             const serviceTypes = results
-                            for (let i = 0; i < serviceTypes.length; i++) {
-                                const element = serviceTypes[i]
-                                moment.serviceTypes.push(new ServiceType(element.type, {}, element.id))
-                            }
-                            return moment
+                            return Promise.all(serviceTypes.map((serviceType) => {
+                                return getPic('serviceTypePic/', serviceType.id)
+                            })).then((pics) => {
+                                for (let i = 0; i < serviceTypes.length; i++) {
+                                    const element = serviceTypes[i]
+                                    let serviceType = new ServiceType(element.type, {}, element.id)
+                                    serviceType.pic = pics[i]
+                                    moment.serviceTypes.push(serviceType)
+                                }
+                                return getPic('momentPic/', moment.id)
+                                    .then((pic) => {
+                                        moment.pic = pic;
+                                        return moment
+                                    })
+                            })
                         })
                         .catch(error => {
                             throw error

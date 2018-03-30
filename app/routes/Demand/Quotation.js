@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import { Demand, Quotation, Service } from 'models';
-
 let router = Router();
 
 //Create quotation
@@ -17,7 +16,6 @@ router.post('/', (req, res) => {
             .then((quotation) => {
                 res.status(201).json(quotation)
             }).catch((error) => {
-                console.log(error)
                 res.status(500).json({ message: error.message })
             });
     }
@@ -54,7 +52,6 @@ router.delete('/:quotationId', (req, res) => {
             res.status(500).json({ message: "Could not remove this quotation" })
         }
     }).catch((error) => {
-        console.log(error)
         res.status(500).json({ message: error.message })
     });
 })
@@ -62,7 +59,7 @@ router.delete('/:quotationId', (req, res) => {
   //gets a given quotation
   router.get('/:quotationId', (req, res) => {
     let quotationId = req.params.quotationId;
-  
+    
     new Quotation().get('id', quotationId)
         .then((quotation) => {
             res.status(200).json(quotation);
