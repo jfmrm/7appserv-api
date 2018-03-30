@@ -47,6 +47,20 @@ export let uploadServiceTypePic = multer({
     })
 })
 
+export let uploadMomentPic = multer({
+  storage: multerS3({
+      s3: s3,
+      bucket: process.env.MY_BUCKET,
+      metadata: function (req, file, cb) {
+        cb(null, {fieldName: file.fieldname});
+      },
+      key: function (req, file, cb) {
+        let extention = file.originalname.split('.')
+        cb(null, 'momentPic/' + req.params.momentId + '.' + extention[1])
+      }
+    })
+})
+
 export function getPic(path, proId) {
   return new Promise((resolve, reject) => {
     s3.getObject({

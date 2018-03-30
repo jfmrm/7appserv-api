@@ -29,17 +29,6 @@ router.patch('/:serviceTypeId/picture', uploadServiceTypePic.single('serviceType
     res.status(200).json({ message: 'success' })
 });
 
-router.get('/:serviceTypeId', (req, res) => {
-    let serviceTypeId = req.params.serviceTypeId;
-
-    new ServiceType().get('id', serviceTypeId)
-        .then((serviceType) => {
-            res.status(200).json(serviceType)
-        }).catch((error) => {
-            res.status(500).json({ message: error.message })
-        });
-});
-
 router.put('/:serviceTypeId', (req, res) => {
     let serviceTypeId = req.params.serviceTypeId;
     let serviceType = req.body.type;

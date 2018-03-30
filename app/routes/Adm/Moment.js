@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { Moment, ServiceType } from '../../models';
+import { uploadMomentPic } from '../helpers/aws/s3';
 
 let router = Router();
 
@@ -18,6 +19,14 @@ router.post('/', (req, res) => {
         .catch((error) => {
             res.status(500).json({ message: error.message })
         });
+});
+
+router.post('/:serviceTypeId/picture', uploadMomentPic.single('serviceTypePic'), (req, res, next) => {
+    res.status(201).json({ message: 'success'})
+});
+
+router.patch('/:serviceTypeId/picture', uploadMomentPic.single('serviceTypePic'), (req, res, next) => {
+    res.status(200).json({ message: 'success' })
 });
 
 router.get('/:momentId', (req, res) => {
