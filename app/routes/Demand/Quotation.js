@@ -62,13 +62,12 @@ router.delete('/:quotationId', (req, res) => {
     
     new Quotation().get('id', quotationId)
         .then((quotation) => {
+            quotation.pic = `https://s3.amazonaws.com/7appserv/momentPic/${quotation.pro.id}.jpg`
             res.status(200).json(quotation);
         }).catch((error) => {
             res.status(500).json({ message: error.message })
         });
 });
-  
-  
   
 router.patch('/visualize', (req, res) => {
     let demandId = req.demand;

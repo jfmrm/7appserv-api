@@ -80,7 +80,8 @@ export class ProVIP extends Pro {
             rate: proVIPListItem.rate,
             latitude: proVIPListItem.latitude,
             longitude: proVIPListItem.longitude,
-            actionRadious: proVIPListItem.action_radious
+            actionRadious: proVIPListItem.action_radious,
+            pic: `https://s3.amazonaws.com/7appserv/profilePic/pros/${proVIPListItem.id}.jpg`
           }
         })
       }).catch((error) => {

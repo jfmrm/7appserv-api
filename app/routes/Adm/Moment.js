@@ -21,11 +21,11 @@ router.post('/', (req, res) => {
         });
 });
 
-router.post('/:serviceTypeId/picture', uploadMomentPic.single('serviceTypePic'), (req, res, next) => {
+router.post('/:momentId/picture', uploadMomentPic.single('serviceTypePic'), (req, res, next) => {
     res.status(201).json({ message: 'success'})
 });
 
-router.patch('/:serviceTypeId/picture', uploadMomentPic.single('serviceTypePic'), (req, res, next) => {
+router.patch('/:momentId/picture', uploadMomentPic.single('serviceTypePic'), (req, res, next) => {
     res.status(200).json({ message: 'success' })
 });
 
@@ -34,6 +34,7 @@ router.get('/:momentId', (req, res) => {
 
     Moment.get('id', momentId)
         .then(moment => {
+            moment.pic = `https://s3.amazonaws.com/7appserv/momentPic/${momentId}.jpg`
             res.status(200).json(moment)
         }).catch((error) => {
             res.status(500).json({ message: error.message })
