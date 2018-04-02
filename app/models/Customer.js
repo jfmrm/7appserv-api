@@ -2,15 +2,15 @@ import { User, Place } from 'models';
 import { Pool } from 'config';
 
 export class Customer extends User {
-  constructor (firstName, lastName, email, password = null, birthDate, places = [], customerId) {
-    super(firstName, lastName, email, password, birthDate);
+  constructor (firstName, lastName, email, birthDate, places = [], customerId) {
+    super(firstName, lastName, email, birthDate);
     this.places = places;
     this.id = customerId;
   }
 
   create() {
-    return Pool.query('INSERT INTO customer (email, first_name, last_name, password, birth_date) VALUES (?, ?, ?, ?, ?)',
-    [this.email, this.firstName, this.lastName, this.password, this.birthDate])
+    return Pool.query('INSERT INTO customer (email, first_name, last_name, birth_date) VALUES (?, ?, ?, ?, ?)',
+    [this.email, this.firstName, this.lastName, this.birthDate])
       .then((results) => {
         return this.get('id', results.insertId)
       }).catch((error) => {
@@ -80,7 +80,7 @@ export class Customer extends User {
     ]).then((data) => {
       for(let i = 0; i < data.length; i++) {
         for(let j = 0; j < data[i].length; j++) {
-          data[i][j].pic = `https://s3.amazonaws.com/7appserv/serviceType/${data[i][j].serviceTypeId}.jpg`
+          data[i][j].pic = `https://s3.amazonaws.com/7appserv/serviceTypePic/${data[i][j].serviceTypeId}.jpg`
         }
       }
       let projectsList = {
@@ -92,6 +92,18 @@ export class Customer extends User {
     }).catch((error) => {
       throw error
     });
+  }
 
+  static updateDeviceToken(email, token) {
+    return Pool.query('UPDATE customer SET device_token = ? WHERE email = ?', [token, email])
+      .then((results) => {
+        if (results.affectedRows == 1) {
+          return true
+        } else {
+          throw new Error('Coud not update device token')
+        }
+      }).catch((error) => {
+        throw error
+      });
   }
 }

@@ -2,8 +2,8 @@ import { User, Address } from 'models';
 import { Pool } from 'config';
 
 export class Pro extends User {
-  constructor (firstName, lastName, email, password, birthDate, address, description, rate = null, proId) {
-    super(firstName, lastName, email, password, birthDate);
+  constructor (firstName, lastName, email, birthDate, address, description, rate = null, proId) {
+    super(firstName, lastName, email, birthDate);
     this.address = address;
     this.rate = rate;
     this.proType = 'Standard';
@@ -15,7 +15,7 @@ export class Pro extends User {
     return this.address.create()
       .then((address) => {
         console.log(this.email)
-        return Pool.query(`INSERT INTO pro (email, password, first_name, last_name, rate, pro_type, birth_date, address_id, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, [this.email, this.password, this.firstName, this.lastName, this.rate, this.proType, this.birthDate, address.id, this.description])
+        return Pool.query(`INSERT INTO pro (email, first_name, last_name, rate, pro_type, birth_date, address_id, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, [this.email, this.firstName, this.lastName, this.rate, this.proType, this.birthDate, address.id, this.description])
       }).then((results) => {
         return this.get('id', results.insertId)
       }).catch((error) => {
@@ -60,5 +60,18 @@ export class Pro extends User {
       }).catch((error) => {
         throw error
       });
+  }
+
+  static updateDeviceToken(email, token) {
+    return Pool.query('UPDATE pro SET device_token = ? WHERE email = ?', [token, email])
+      .then((results) => {
+        if (results.affectedRows == 1) {
+          return true
+        } else  {
+          throw new Error('could not update device token')
+        }
+      }).catch((error) => {
+        throw error
+      })
   }
 }

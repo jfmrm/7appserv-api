@@ -31,6 +31,22 @@ router.post('/', (req, res) => {
   }
 });
 
+router.patch('/device_token', (req, res) => {
+  let proEmail = req.body.email;
+  let deviceToken = req.body.deviceToken;
+
+  if(!proEmail || !deviceToken) {
+    res.status(400).json({ message: "missing parameters" })
+  } else {
+    Pro.updateDeviceToken(proEmail, deviceToken)
+      .then((result) => {
+        res.status(200).json({ message: 'success' })
+      }).catch((error) => {
+        res.status(500).json({ message: error.message })
+      });
+  }
+});
+
 router.post('/:proId/profile_picture', uploadProProfilePic.single('profilePic'), (req, res, next) => {
   res.status(201).json({ message: 'success' })
 });
