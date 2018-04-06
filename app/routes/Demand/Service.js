@@ -35,8 +35,18 @@ router.post('/:serviceId/finish_service', (req, res) => {
         .then((doneTime) => {
             res.status(200).json(doneTime)
         }).catch((error) => {
-            console.log(error)
             res.status(500).json({ message: error.message })
+        });
+});
+
+router.get('/:serviceId', (req, res) => {
+    let serviceId = req.params.serviceId;
+
+    Service.get('id', serviceId)
+        .then((service) => {
+            res.status(200).json(service);
+        }).catch((error) => {
+            res.status(500).json({ message: error.message });
         });
 });
 

@@ -2,9 +2,11 @@ import { Pool } from 'config';
 import { Demand, Pro } from 'models';
 
 export class Service extends Demand {
-  constructor(demand, pro, isGoing, isDone, doneTime, started, startTime, serviceId) {
+  constructor(demand, pro, value, isGoing, isDone, doneTime, started, startTime, serviceId) {
     super(demand.customer, demand.place, demand.serviceType, demand.dueDate, demand.details, demand.isPublic, demand.pro, demand.isOpen, demand.lastModified, demand.id);
+    this.serviceId = serviceId;
     this.pro = pro;
+    this.value = value;
     this.isGoing = isGoing;
     this.isDone = isDone;
     this.doneTime = doneTime;
@@ -16,32 +18,35 @@ export class Service extends Demand {
   create() {
     return Pool.query('INSERT INTO service (demand_id, pro_id) VALUES (?, ?)', [this.id, this.pro])
       .then((results) => {
-        return this.get('id', results.insertId)
+        return Service.get('id', results.insertId)
       }).catch((error) => {
         throw error
       });
   }
 
-  get(column, param) {
+  static get(column, param) {
     return Pool.query('SELECT * FROM service WHERE ' + column + ' = ?', [param])
       .then((results) => {
-        let p = Promise.all([new Demand().get('id', results[0].demand_id), new Pro().get('id', results[0].pro_id)])
-        return { results: results, p: p }
-      }).then(({ results: results, p: p }) => {
-        return p.then((res) => {
-          //not tested yet
-          return new Service(res[0], res[1], results[0].is_going, results[0].is_done, results[0].done_time, results[0].started, results[0].start_time, results[0].id)
+        let p = Promise.all([
+          new Demand().get('id', results[0].demand_id),
+          new Pro().get('id', results[0].pro_id),
+          Pool.query('SELECT value FROM quotation WHERE demand_id = ?', [results[0].demand_id])
+        ])
+        return {results: results, p: p}
+      }).then(({results, p}) => {
+        return p.then((data) => {
+          return new Service(data[0], data[1], data[2][0].value, results[0].is_going, results[0].is_done, results[0].done_time, results[0].started, results[0].start_time, results[0].id)
         })
       }).catch((error) => {
         throw error
-      });
+      })
   }
 
   update() {
     //not tested yet
     return Pool.query('UPDATE service SET demand_id = ?, pro_id = ?', [this.demand_id, this.pro_id])
       .then((results) => {
-        return this.get('id', this.serviceId)
+        return Service.get('id', this.serviceId)
       }).catch((error) => {
         throw error
       });

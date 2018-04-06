@@ -40,7 +40,7 @@ app.use('/api/service_types', ServiceTypeRouter);
 app.use('/api/moments', MomentRouter);
 app.use('/api/demands', DemandRouter);
 app.use('/api/demands/:demandId/quotations', getDemand, QuotationRouter);
-app.use('/api/demands/:demandId/services', getDemand, ServiceRouter);
+app.use('/api/services', ServiceRouter);
 app.use('/api/adm/service_types', ServiceTypeAdmRouter);
 app.use('/api/adm/moments', MomentAdmRouter);
 app.use('/api/adm/questions', QuestionsRouter);
