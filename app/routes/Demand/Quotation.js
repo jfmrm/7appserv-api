@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { Demand, Quotation, Service } from 'models';
+import { startChat } from '../helpers';
 let router = Router();
 
 //Create quotation
@@ -8,12 +9,13 @@ router.post('/', (req, res) => {
     let demandId = req.demand.id;
     let value = req.body.value;
     let details = req.body.details;
-  
+
     if(!proId || !demandId || !value) {
         res.status(400).json({ message: 'missing parameters' });
     } else {
         new Quotation(proId, demandId, value, details).create()
-            .then((quotation) => {
+        .then((quotation) => {
+                startChat(proId, quotation.demand.customer.id, details).then((chat) => console.log(chat)) 
                 res.status(201).json(quotation)
             }).catch((error) => {
                 res.status(500).json({ message: error.message })
@@ -92,5 +94,5 @@ router.patch('/:quotationId/accept', (req, res) => {
             res.status(500).json({ message: error.message })
         });
 });
-  
+
 export const QuotationRouter = router;

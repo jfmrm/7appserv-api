@@ -21,7 +21,7 @@ export class Customer extends User {
   get(column, param) {
     return Pool.query('SELECT * FROM customer where ' + column + ' = ?', [param])
       .then((results) => {
-        return new Customer(results[0].first_name, results[0].last_name, results[0].email, null, results[0].birth_date, null, results[0].id )
+        return new Customer(results[0].first_name, results[0].last_name, results[0].email, results[0].birth_date, null, results[0].id )
       }).then((customer) => {
         return new Place().getListByCustomerId(customer.id)
           .then((places) => {
