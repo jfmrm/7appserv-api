@@ -99,9 +99,10 @@ router.get('/:customerId', (req, res) => {
   
   new Customer().get('id', customerId)
     .then((customer) => {
-      customer.pic = `https://s3.amazonaws.com/7appserv/profilePic/customers/${momentId}.jpg`      
+      customer.pic = `https://s3.amazonaws.com/7appserv/profilePic/customers/${customerId}.jpg`      
       res.status(200).json(customer)
   }).catch((error) => {
+    console.log(error)
     res.status(500).json({ message: error.message })
   });
 });
