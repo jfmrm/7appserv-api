@@ -1,4 +1,4 @@
-import { Customer, Pro, ProVIP, Address, City, Service } from 'models';
+import { Customer, Pro, ProVIP, Address, City, Service } from '../../models';
 import { Router } from 'express';
 import { uploadProProfilePic,
          getPic,
@@ -14,31 +14,37 @@ router.post('/', (req, res) => {
   let birthDate = req.body.birthDate;
   let address = req.body.address;
   let description = req.body.description;
+  let id = req.body.id;
+  let deviceToken = req.body.deviceToken;
 
-  if (!firstName || !lastName || !email || !password || !birthDate || !address || !description) {
+  if (!firstName || !lastName || !email || !password || !birthDate || !address || !description || !id || !deviceToken) {
     res.status(400).json({ message: 'missing parameters' });
   } else {
     new City().get('id', address.cityId)
       .then((city) => {
         let addr = new Address(address.addressLine, address.addressLine2, address.district, city, address.zipCode, address.latitude, address.longitude)
-        let pro = new Pro(firstName, lastName, email, password, birthDate, addr, description);
+        let pro = new Pro(firstName, lastName, email, birthDate, addr, description, null, id);
         return pro.create()
       }).then((pro) => {
-        res.status(201).json(pro)
+        return Pro.updateDeviceToken(pro.id, deviceToken)
+          .then(() => {
+            res.status(201).json(pro)
+          })
       }).catch((error) => {
+        console.log(error)
         res.status(500).json({ message: error.message })
       });
   }
 });
 
-router.patch('/device_token', (req, res) => {
-  let proEmail = req.body.email;
+router.patch('/:proId/device_token', (req, res) => {
   let deviceToken = req.body.deviceToken;
+  let proId = req.params.proId;
 
-  if(!proEmail || !deviceToken) {
+  if(!proId || !deviceToken) {
     res.status(400).json({ message: "missing parameters" })
   } else {
-    Pro.updateDeviceToken(proEmail, deviceToken)
+    Pro.updateDeviceToken(proId, deviceToken)
       .then((result) => {
         res.status(200).json({ message: 'success' })
       }).catch((error) => {

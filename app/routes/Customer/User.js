@@ -29,14 +29,14 @@ router.post('/', (req, res) => {
   }
 });
 
-router.patch('/device_token', (req, res) => {
-  let email = req.body.email;
+router.patch('/:customerId/device_token', (req, res) => {
   let deviceToken = req.body.deviceToken;
+  let customerId = req.params.customerId;
 
-  if(!email || !deviceToken) {
+  if(!deviceToken) {
     res.status(400).json({ message: "missing parameters" });
   } else {
-    Customer.updateDeviceToken(email, deviceToken)
+    Customer.updateDeviceToken(customerId, deviceToken)
       .then((result) => {
         res.status(200).json({ message: "success"})
       }).catch((error) => {

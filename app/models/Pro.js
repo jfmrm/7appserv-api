@@ -15,7 +15,7 @@ export class Pro extends User {
     return this.address.create()
       .then((address) => {
         console.log(this.email)
-        return Pool.query(`INSERT INTO pro (email, first_name, last_name, rate, pro_type, birth_date, address_id, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, [this.email, this.firstName, this.lastName, this.rate, this.proType, this.birthDate, address.id, this.description])
+        return Pool.query(`INSERT INTO pro (email, first_name, last_name, pro_type, birth_date, address_id, description, id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, [this.email, this.firstName, this.lastName, this.proType, this.birthDate, address.id, this.description, this.id])
       }).then((results) => {
         return this.get('id', results.insertId)
       }).catch((error) => {
@@ -30,7 +30,7 @@ export class Pro extends User {
         return { results: results, address: address }
       }).then(({results: results, address: address}) => {
         return address.then((address) => {
-          return new Pro(results[0].first_name, results[0].last_name, results[0].email, null, results[0].birth_date, address, results[0].description, results[0].rate, results[0].id)
+          return new Pro(results[0].first_name, results[0].last_name, results[0].email, results[0].birth_date, address, results[0].description, results[0].rate, results[0].id)
         })
       }).catch((error) => {
         throw error
@@ -62,8 +62,8 @@ export class Pro extends User {
       });
   }
 
-  static updateDeviceToken(email, token) {
-    return Pool.query('UPDATE pro SET device_token = ? WHERE email = ?', [token, email])
+  static updateDeviceToken(id, token) {
+    return Pool.query('UPDATE pro SET device_token = ? WHERE id = ?', [token, id])
       .then((results) => {
         if (results.affectedRows == 1) {
           return true
