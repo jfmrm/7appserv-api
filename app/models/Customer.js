@@ -9,8 +9,8 @@ export class Customer extends User {
   }
 
   create() {
-    return Pool.query('INSERT INTO customer (email, first_name, last_name, birth_date) VALUES (?, ?, ?, ?, ?)',
-    [this.email, this.firstName, this.lastName, this.birthDate])
+    return Pool.query('INSERT INTO customer (email, first_name, last_name, birth_date, id) VALUES (?, ?, ?, ?, ?)',
+    [this.email, this.firstName, this.lastName, this.birthDate, this.id])
       .then((results) => {
         return this.get('id', results.insertId)
       }).catch((error) => {
@@ -94,8 +94,8 @@ export class Customer extends User {
     });
   }
 
-  static updateDeviceToken(email, token) {
-    return Pool.query('UPDATE customer SET device_token = ? WHERE email = ?', [token, email])
+  static updateDeviceToken(id, token) {
+    return Pool.query('UPDATE customer SET device_token = ? WHERE id = ?', [token, id])
       .then((results) => {
         if (results.affectedRows == 1) {
           return true

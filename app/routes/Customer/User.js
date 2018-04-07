@@ -1,4 +1,4 @@
-import { Customer, Address, City, Place } from 'models';
+import { Customer, Address, City, Place } from '../../models';
 import { Router } from 'express';
 import { uploadCustomerProfilePic,
          getPic } from '../helpers';
@@ -9,16 +9,20 @@ router.post('/', (req, res) => {
   let firstName = req.body.firstName;
   let lastName = req.body.lastName;
   let email = req.body.email;
-  let password = req.body.password;
   let birthDate = req.body.birthDate;
+  let deviceToken = req.body.deviceToken;
+  let id = req.body.id;
 
-  if(!firstName || !lastName || !email || !password || !birthDate) {
+  if(!firstName || !lastName || !email || !deviceToken || !id || !birthDate) {
     res.status(400).json({ message: 'missing arguments'});
   } else {
-    let customer = new Customer(firstName, lastName, email, password, birthDate);
+    let customer = new Customer(firstName, lastName, email, birthDate, null, id);
     customer.create()
       .then((customer) => {
-        res.status(201).json(customer)
+        return Customer.updateDeviceToken(id, deviceToken)
+          .then(() => {
+            res.status(201).json(customer)
+          })
       }).catch((error) => {
         res.status(500).json({ message: error.message })
       });
