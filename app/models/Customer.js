@@ -66,17 +66,15 @@ export class Customer extends User {
                   INNER JOIN customer ON customer.id = demand.customer_id
                   WHERE demand.customer_id = ? AND demand.is_open = true
                   GROUP BY demand.id`, [customerId]),
-      Pool.query(`SELECT demand.id as demandId, service_type.type, service_type.id as serviceTypeId, demand.last_modified as lastModified, demand.is_open as isOpen FROM demand
+      Pool.query(`SELECT demand.id as demandId, service_type.type, service_type.id as serviceTypeId, demand.last_modified as lastModified, demand.due_date as dueDate FROM demand
                   INNER JOIN service_type ON service_type.id = demand.service_type_id
                   INNER JOIN customer ON customer.id = demand.customer_id
                   WHERE demand.customer_id = ? AND demand.is_open = false
                   GROUP BY demand.id`, [customerId]),
-      Pool.query(`SELECT demand.id as demandId, service_type.type, service_type.id as serviceTypeId, demand.last_modified as lastModified, service.done_time as doneTime FROM demand
-                  INNER JOIN service_type ON service_type.id = demand.service_type_id
-                  INNER JOIN customer ON customer.id = demand.customer_id
-                  INNER JOIN service ON service.demand_id = demand.id
-                  WHERE demand.customer_id = 13 AND demand.is_open = false AND service.is_done = true
-                  GROUP BY demand.id`, [customerId])
+      Pool.query(`SELECT service.demand_id as demandId, service_type.type, service_type.id as serviceTypeId, demand.last_modified as lastModified, service.done_time as doneTime FROM service
+                  INNER JOIN demand ON demand.id = service.demand_id
+                  INNER JOIN service_type ON demand.service_type_id = service_type.id
+                  WHERE service.is_done = true AND demand.customer_id = ?`, [customerId])
     ]).then((data) => {
       for(let i = 0; i < data.length; i++) {
         for(let j = 0; j < data[i].length; j++) {
