@@ -2,6 +2,7 @@ import { Pool } from 'config';
 import { Pro, Demand } from 'models';
 import { isError } from 'util';
 import { Service } from './Service';
+import { POINT_CONVERSION_COMPRESSED } from 'constants';
 
 export class Quotation {
     constructor (pro, demand, value, details, visulized, id, serviceId) {
@@ -112,23 +113,20 @@ export class Quotation {
     }
 
     accept(quotationId) {
-        return Pool.query('UPDATE quotation SET chosen = true WHERE id = ?', [quotationId])
-            .then((results) => {
-                return Pool.query('SELECT pro_id, demand_id FROM quotation WHERE id = ?', [quotationId])
-            }).then((results) => {
-                let p = new Demand().close(results[0].demand_id)
-                return {p, results}
-            }).then(({p, results}) => {
-                return p.then((closed) => {
-                    p = new Demand().get('id', results[0].demand_id)
-                    return {p, results}
-                })
-            }).then(({p, results}) => {
-                return p.then((demand) => {
-                    return new Service(demand, results[0].pro_id).create()
-                })
-            }).catch((error) => {
-                throw error
-            });
+        return Promise.all([
+            Pool.query('UPDATE quotation SET chosen = true WHERE id = ?', [quotationId]),
+            Pool.query('SELECT demand_id FROM quotation WHERE id = ?', [quotationId])
+        ]).then((results) => {
+            return Promise.all([
+                Pool.query('UPDATE demand SET is_open = false WHERE id = ?', results[1][0].demand_id),
+                Pool.query('SELECT * FROM quotation WHERE id = ?', [quotationId]),
+                new Demand().get('id', results[1][0].demand_id)
+            ])
+        }).then((results) => {
+            console.log(results[2])
+            return new Service(results[2], results[1][0].pro_id, results[1][0].value).create()
+        }).catch((error) => {
+            throw error
+        })
     }
 }
