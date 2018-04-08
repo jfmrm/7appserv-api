@@ -2,6 +2,7 @@ import { Customer, Address, City, Place } from '../../models';
 import { Router } from 'express';
 import { uploadCustomerProfilePic,
          getPic } from '../helpers';
+import { verifyIdentity } from '../../../config/auth';
 
 let router = Router();
 //creates a new Customer
@@ -28,6 +29,10 @@ router.post('/', (req, res) => {
       });
   }
 });
+
+router.patch('/', verifyIdentity);
+router.post('/', verifyIdentity);
+router.put('/', verifyIdentity);
 
 router.patch('/:customerId/device_token', (req, res) => {
   let deviceToken = req.body.deviceToken;

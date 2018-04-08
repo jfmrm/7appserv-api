@@ -15,3 +15,14 @@ export function auth (req, res, next) {
             }
         })
 }
+
+export function verifyIdentity(req, res, next) {
+    let userId = req.userId;
+    let providedId = req.params.customerId || req.params.proId;
+
+    if(providedId == userId) {
+        next();
+    } else {
+        res.status(403).json({ message: 'access denied' });
+    }
+}
