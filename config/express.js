@@ -14,9 +14,11 @@ import { CustomerUserRouter,
          ProPaymentsRouter,
          MomentRouter,
          MomentAdmRouter,
-         CityRouter } from 'routes';
+         CityRouter,
+         AuthRouter } from 'routes';
 import { getPro,
          getDemand } from './middlewares';
+import { auth } from './auth';
 
 let awsConfig = new aws.Config({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -34,6 +36,7 @@ app.use(bodyparser.json());
 app.get('/health', (req, res) => {
     res.status(200).json('im alive');
 });
+app.use('/api', auth);
 app.use('/api/customers/users', CustomerUserRouter);
 app.use('/api/pros/users', ProUserRouter);
 app.use('/api/pros/:proId/payments', getPro, ProPaymentsRouter);
