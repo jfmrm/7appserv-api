@@ -15,7 +15,7 @@ router.post('/', (req, res) => {
     } else {
         new Quotation(proId, demandId, value, details).create()
         .then((quotation) => {
-                startChat(proId, quotation.demand.customer.id, details).then((chat) => console.log(chat)) 
+                // startChat(proId, quotation.demand.customer.id, details).then((chat) => console.log(chat)) 
                 res.status(201).json(quotation)
             }).catch((error) => {
                 res.status(500).json({ message: error.message })
