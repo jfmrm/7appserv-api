@@ -11,3 +11,4 @@ export { ServiceTypeAdmRouter,
          MomentAdmRouter } from './Adm';
 export { ServiceTypeRouter } from './ServiceType';
 export { MomentRouter } from './Moment';
+export { CityRouter } from './City';

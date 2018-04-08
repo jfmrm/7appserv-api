@@ -13,7 +13,8 @@ import { CustomerUserRouter,
          ServiceTypeRouter,
          ProPaymentsRouter,
          MomentRouter,
-         MomentAdmRouter } from 'routes';
+         MomentAdmRouter,
+         CityRouter } from 'routes';
 import { getPro,
          getDemand } from './middlewares';
 
@@ -41,6 +42,7 @@ app.use('/api/moments', MomentRouter);
 app.use('/api/demands', DemandRouter);
 app.use('/api/demands/:demandId/quotations', getDemand, QuotationRouter);
 app.use('/api/services', ServiceRouter);
+app.use('/api/cities', CityRouter);
 app.use('/api/adm/service_types', ServiceTypeAdmRouter);
 app.use('/api/adm/moments', MomentAdmRouter);
 app.use('/api/adm/questions', QuestionsRouter);

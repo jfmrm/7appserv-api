@@ -45,4 +45,15 @@ export class City {
         throw error
       });
   }
+
+  static listCities() {
+    return Pool.query('SELECT * FROM city')
+      .then((results) => {
+        return Promise.all(results.map((city) => {
+          return new City(results[0].name, results[0].id)
+        }))
+      }).catch((error) => {
+        throw error
+      });
+  }
 }

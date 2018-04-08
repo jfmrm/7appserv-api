@@ -102,7 +102,6 @@ router.get('/:customerId', (req, res) => {
       customer.pic = `https://s3.amazonaws.com/7appserv/profilePic/customers/${customerId}.jpg`      
       res.status(200).json(customer)
   }).catch((error) => {
-    console.log(error)
     res.status(500).json({ message: error.message })
   });
 });
@@ -124,7 +123,6 @@ router.post('/:customerId/places', (req, res) => {
       }).then((place) => {
         res.status(201).json(place)
       }).catch((error) => {
-        console.log(error)
         res.status(500).json({ message: error.message })
       });
   }
@@ -157,7 +155,6 @@ router.delete('/:customerId/places/:placeId', (req, res) => {
           res.status(200).json({ message: 'Place successfully deleted' })
         }
       }).catch((error) => {
-        console.log(error)
         res.status(500).json({message: 'Place does not exists, or is corrupted'})
       });
   }
