@@ -7,12 +7,11 @@ let router = Router();
 router.post('/', (req, res) => {
     let name = req.body.name;
     let form = req.body.form;
-    // console.log(form)
 
     if(!name || !form) {
         res.status(400).json({ message: 'missing marameters' })
     } else {
-        new ServiceType(null, name, form).create()
+        new ServiceType(name, form).create()
             .then((serviceType) => {
                 res.status(201).json(serviceType)
             }).catch((error) => {

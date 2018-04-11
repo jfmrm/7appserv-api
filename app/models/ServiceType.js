@@ -18,9 +18,9 @@ export class ServiceType {
   }
 
   create() {
-    return Pool.query('INSERT INTO service_type (type, form, reference_counter) VALUES (?, ?)', [this.type, JSON.stringify(this.form), this.referenceCounter])
+    return Pool.query('INSERT INTO service_type (type, form) VALUES (?, ?)', [this.type, JSON.stringify(this.form)])
       .then((results) => {
-        return this.get('id', results.insertId)
+        return ServiceType.get('id', results.insertId)
       }).catch((error) => {
         throw error
       });

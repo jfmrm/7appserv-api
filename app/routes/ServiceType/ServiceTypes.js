@@ -23,4 +23,15 @@ router.get('/:serviceTypeId/form', (req, res) => {
         })
 })
 
+router.get('/:serviceTypeId', (req, res) => {
+    let serviceTypeId = req.params.serviceTypeId;
+
+    ServiceType.get('id', serviceTypeId)
+        .then((serviceType) => {
+            res.status(200).json(serviceType);
+        }).catch((error) => {
+            res.status(500).json({ message: error})
+        })
+})
+
 export const ServiceTypeRouter = router;

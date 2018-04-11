@@ -26,7 +26,6 @@ router.post('/public', (req, res) => {
         }).then((demand) => {
             res.status(201).json(demand)
         }).catch((error) => {
-            console.log(error)
             res.status(500).json({ message: error.message })
         });
     }
@@ -54,7 +53,6 @@ router.post('/private', (req, res) => {
       }).then((demand) => {
         res.status(201).json(demand)
       }).catch((error) => {
-        console.log(error)
         res.status(500).json({ message: error.message })
       })
     }

@@ -91,7 +91,6 @@ router.patch('/:quotationId/accept', (req, res) => {
         .then((service) => {
             res.status(201).json(service)
         }).catch((error) => {
-            console.log(error)
             res.status(500).json({ message: error })
         });
 });

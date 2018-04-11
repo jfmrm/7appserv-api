@@ -10,14 +10,13 @@ router.post('/', (req, res) => {
   let firstName = req.body.firstName;
   let lastName = req.body.lastName;
   let email = req.body.email;
-  let password = req.body.password;
   let birthDate = req.body.birthDate;
   let address = req.body.address;
   let description = req.body.description;
   let id = req.body.id;
   let deviceToken = req.body.deviceToken;
 
-  if (!firstName || !lastName || !email || !password || !birthDate || !address || !description || !id || !deviceToken) {
+  if (!firstName || !lastName || !email || !birthDate || !address || !description || !id || !deviceToken) {
     res.status(400).json({ message: 'missing parameters' });
   } else {
     new City().get('id', address.cityId)
@@ -31,7 +30,6 @@ router.post('/', (req, res) => {
             res.status(201).json(pro)
           })
       }).catch((error) => {
-        console.log(error)
         res.status(500).json({ message: error.message })
       });
   }
@@ -174,7 +172,6 @@ router.get('/:proId/projects', (req, res) => {
       }
       res.status(200).json(serviceList)
   }).catch((error) => {
-      console.log(error)
       res.status(500).json({ message: error })
   });
 });
