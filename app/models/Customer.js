@@ -12,7 +12,7 @@ export class Customer extends User {
     return Pool.query('INSERT INTO customer (email, first_name, last_name, birth_date, id) VALUES (?, ?, ?, ?, ?)',
     [this.email, this.firstName, this.lastName, this.birthDate, this.id])
       .then((results) => {
-        return this.get('id', results.insertId)
+        return this.get('id', this.id)
       }).catch((error) => {
         throw error
       });
