@@ -16,7 +16,7 @@ export class Pro extends User {
       .then((address) => {
         return Pool.query(`INSERT INTO pro (email, first_name, last_name, pro_type, birth_date, address_id, description, id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, [this.email, this.firstName, this.lastName, this.proType, this.birthDate, address.id, this.description, this.id])
       }).then((results) => {
-        return this.get('id', results.insertId)
+        return this.get('id', this.id)
       }).catch((error) => {
         throw error
       });
