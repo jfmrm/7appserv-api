@@ -18,6 +18,9 @@ router.get('/:momentId/', (req, res) => {
     let momentId = req.params.momentId;
     Moment.get('id', momentId)
         .then(moment => {
+            moment.serviceTypes.forEach(element => {
+                element.pic = `https://s3.amazonaws.com/7appserv/serviceTypePic/${element.id}.jpg`
+            });
             moment.pic = `https://s3.amazonaws.com/7appserv/momentPic/${momentId}.jpg`;
             res.status(200).json(moment)
         }).catch(error => {
