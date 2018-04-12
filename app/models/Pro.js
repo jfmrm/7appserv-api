@@ -2,11 +2,11 @@ import { User, Address } from 'models';
 import { Pool } from 'config';
 
 export class Pro extends User {
-  constructor (firstName, lastName, email, birthDate, address, description, rate = null, proId) {
+  constructor (firstName, lastName, email, birthDate, address, description, rate = null, proId, proType = "Standard") {
     super(firstName, lastName, email, birthDate);
     this.address = address;
     this.rate = rate;
-    this.proType = 'Standard';
+    this.proType = proType;
     this.description = description;
     this.id = proId;
   }
@@ -14,7 +14,6 @@ export class Pro extends User {
   create() {
     return this.address.create()
       .then((address) => {
-        console.log(this.email)
         return Pool.query(`INSERT INTO pro (email, first_name, last_name, pro_type, birth_date, address_id, description, id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, [this.email, this.firstName, this.lastName, this.proType, this.birthDate, address.id, this.description, this.id])
       }).then((results) => {
         return this.get('id', results.insertId)
@@ -30,7 +29,7 @@ export class Pro extends User {
         return { results: results, address: address }
       }).then(({results: results, address: address}) => {
         return address.then((address) => {
-          return new Pro(results[0].first_name, results[0].last_name, results[0].email, results[0].birth_date, address, results[0].description, results[0].rate, results[0].id)
+          return new Pro(results[0].first_name, results[0].last_name, results[0].email, results[0].birth_date, address, results[0].description, results[0].rate, results[0].id, results[0].pro_type)
         })
       }).catch((error) => {
         throw error

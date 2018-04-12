@@ -137,17 +137,6 @@ router.get('/:proId', (req, res) => {
   }
 });
 
-//list pros avable on the given city
-router.get('/vip/cities/:cityId', (req, res) => {
-  let cityId = req.params.cityId
-
-  new ProVIP().getProVIPList(cityId)
-    .then((proVIPList) => {
-      res.status(200).json(proVIPList)
-    }).catch((error) => {
-      res.status(500).json({ message: error.message })
-    });
-});
 
 router.get('/payments/client_token', (req, res) => {
   generateClientToken().then((token) => {
@@ -174,6 +163,38 @@ router.get('/:proId/projects', (req, res) => {
   }).catch((error) => {
       res.status(500).json({ message: error })
   });
+});
+
+//list pros avable on the given city
+router.get('/vip/cities/:cityId', (req, res) => {
+  let cityId = req.params.cityId;
+
+  ProVIP.getProVIPList(cityId)
+    .then((proVIPList) => {
+      res.status(200).json(proVIPList)
+    }).catch((error) => {
+      res.status(500).json({ message: error.message })
+    });
+});
+
+router.post('/:proId/turn_vip', (req, res) => {
+  let proId = req.params.proId;
+  let ein = req.body.ein;
+  let companyName = req.body.companyName;
+  let licenseNumber = req.body.licenseNumber;
+
+  if(!ein || !companyName || !licenseNumber) {
+    res.status(400).json({ message: "missing parameters" })
+  } else {
+    new Pro().get('id', proId)
+      .then((pro) => {
+        return new ProVIP(pro, ein, companyName, licenseNumber).create();
+      }).then((proVIP) => {
+        res.status(201).json(proVIP);
+      }).catch((error) => {
+        res.status(500).json({ message: error });
+      });
+  }
 });
 
 export const ProUserRouter = router;
