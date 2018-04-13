@@ -3,6 +3,7 @@ import { Router } from 'express';
 import { uploadProProfilePic,
          getPic,
          generateClientToken } from '../helpers';
+import { chatkit } from '../../../config';
 
 let router = Router();
 //creates new Pro
@@ -25,11 +26,15 @@ router.post('/', (req, res) => {
         let pro = new Pro(firstName, lastName, email, birthDate, addr, description, null, id);
         return pro.create()
       }).then((pro) => {
-        return Pro.updateDeviceToken(pro.id, deviceToken)
-          .then(() => {
+        return Promise.all([
+          Pro.updateDeviceToken(pro.id, deviceToken),
+          chatkit.createUser({ id: pro.id, name: `${pro.firstName} ${pro.lastName}`, avatarURL: `https://s3.amazonaws.com/7appserv/profilePic/pros/${pro.id}.jpg`})
+        ]).then(() => {
+            pro.profilePic = `https://s3.amazonaws.com/7appserv/profilePic/pros/${pro.id}.jpg`
             res.status(201).json(pro)
           })
       }).catch((error) => {
+        console.log(error)
         res.status(500).json({ message: error.message })
       });
   }
@@ -59,17 +64,6 @@ router.patch('/:proId/profile_picture', uploadProProfilePic.single('profilePic')
   res.status(200).json({ message: 'success' })
 });
 
-router.get('/:proId/profile_picture', (req, res) => {
-  let proId = req.params.proId;
-
-  getPic('profilePic/pros/', proId)
-    .then((profilePic) => {
-      res.status(200).json(profilePic);
-    }).catch((error) => {
-      res.status(500).json({ message: error });
-    });
-});
-
 //edit Pro
 //rever error
 router.put('/:proId', (req, res) => {
@@ -96,6 +90,7 @@ router.put('/:proId', (req, res) => {
       }).then((address) => {
         return new Pro(firstName, lastName, email, null, birthDate, address, description, null, proId).update()
       }).then((pro) => {
+        pro.profilePic = `https://s3.amazonaws.com/7appserv/profilePic/pros/${pro.id}.jpg`;
         res.status(200).json(pro)
       }).catch((error) => {
         res.status(500).json({ message: error.message })
@@ -130,6 +125,7 @@ router.get('/:proId', (req, res) => {
   } else {
     new Pro().get('id', proId)
       .then((pro) => {
+        pro.profilePic = `https://s3.amazonaws.com/7appserv/profilePic/pros/${pro.id}.jpg`
         res.status(200).json(pro)
       }).catch((error) => {
         res.status(500).json({ message: error.message })

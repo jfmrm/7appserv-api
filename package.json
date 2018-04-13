@@ -37,6 +37,7 @@
     "nodemailer": "^4.4.2",
     "nodemon": "^1.14.9",
     "promise-mysql": "^3.1.5",
-    "pubnub": "^4.20.2"
+    "pubnub": "^4.20.2",
+    "pusher-chatkit-server": "^0.11.1"
   }
 }

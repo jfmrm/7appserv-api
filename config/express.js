@@ -17,6 +17,7 @@ import { CustomerUserRouter,
          CityRouter } from 'routes';
 import { getPro,
          getDemand } from './middlewares';
+import { chatkit } from './pusher';
 
 let awsConfig = new aws.Config({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -31,6 +32,17 @@ app.use(morgan('dev'));
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json());
 
+app.get('/chat', (req, res) => {
+    chatkit.createUser({ id: 'awsome2', name: 'mr.awsome2'}).then((data) => { res.status(200).json(data)}).catch((error) => {res.status(500).json(error)})
+});
+app.get('/create_chat', (req, res) => {
+    chatkit.createRoom({ creatorId: 'awsome', name: 'myAWSOMEchat', userIds: ["awsome2"] })
+        .then((dale) => {
+            res.status(200).json(dale);
+        }).catch((error) => {
+            res.status(500).json(error);
+        });
+});
 app.get('/health', (req, res) => {
     res.status(200).json('im alive');
 });

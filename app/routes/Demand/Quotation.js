@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { Demand, Quotation, Service } from 'models';
-import { startChat } from '../helpers';
+import { Demand, Quotation, Service } from '../../models';
 let router = Router();
+import { chatkit } from '../../../config';
 
 //Create quotation
 router.post('/', (req, res) => {
@@ -15,11 +15,13 @@ router.post('/', (req, res) => {
     } else {
         new Quotation(proId, demandId, value, details).create()
         .then((quotation) => {
-                // startChat(proId, quotation.demand.customer.id, details).then((chat) => console.log(chat)) 
-                res.status(201).json(quotation)
-            }).catch((error) => {
-                res.status(500).json({ message: error.message })
-            });
+            chatkit.createRoom({ creatorId: proid, name: quotation.pro.name, userIds: quotation.demand.customer.id })
+                .then(() => {
+                    res.status(201).json(quotation)
+                })
+        }).catch((error) => {
+            res.status(500).json({ message: error.message })
+        });
     }
 });
   

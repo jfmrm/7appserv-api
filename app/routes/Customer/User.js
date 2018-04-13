@@ -2,6 +2,7 @@ import { Customer, Address, City, Place } from '../../models';
 import { Router } from 'express';
 import { uploadCustomerProfilePic,
          getPic } from '../helpers';
+// import { chatkit } from '../../../config'; 
 
 let router = Router();
 //creates a new Customer
@@ -19,11 +20,18 @@ router.post('/', (req, res) => {
     let customer = new Customer(firstName, lastName, email, birthDate, null, id);
     customer.create()
       .then((customer) => {
-        return Customer.updateDeviceToken(id, deviceToken)
-          .then(() => {
+        const chatkit = new Chatkit({
+          instanceLocator: process.env.PUSHER_INSTACE_LOCATOR,
+          key: process.env.PUSHER_KEY,
+        });
+        return Promise.all([
+          Customer.updateDeviceToken(id, deviceToken),
+          chatkit.createUser({id, name: firstName + " " + lastName, avatarUrl: `https://s3.amazonaws.com/7appserv/profilePic/customers/${id}.jpg`})
+        ]).then(() => {
             res.status(201).json(customer)
-          })
+        })
       }).catch((error) => {
+        console.log(error)
         res.status(500).json({ message: error.message })
       });
   }
@@ -68,7 +76,7 @@ router.put('/:customerId', (req, res) => {
   } else {
     new Customer(firstName, lastName, email, null, birthDate, customerId).update()
       .then((customer) => {
-        customer.pic = `https://s3.amazonaws.com/7appserv/profilePic/customers/${momentId}.jpg`
+        customer.pic = `https://s3.amazonaws.com/7appserv/profilePic/customers/${customerId}.jpg`
         res.status(200).json(customer)
       }).catch((error) => {
         res.status(500).json({ message: error.message })
