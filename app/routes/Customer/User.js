@@ -2,7 +2,7 @@ import { Customer, Address, City, Place } from '../../models';
 import { Router } from 'express';
 import { uploadCustomerProfilePic,
          getPic } from '../helpers';
-// import { chatkit } from '../../../config'; 
+import { chatkit } from '../../../config'; 
 
 let router = Router();
 //creates a new Customer
@@ -205,4 +205,15 @@ router.get('/:customerId/projects', (req, res) => {
     });
 });
 
+router.get('/:customerId/chats', (req, res) => {
+  let customerId = req.params.customerId;
+
+  chatkit.getUserRooms({
+    userId: customerId
+  }).then((chats) => {
+    res.status(200).json(chats)
+  }).catch((error) => {
+    res.status(500).json({ message: error.message })
+  })
+})
 export const CustomerUserRouter = router;

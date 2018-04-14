@@ -34,7 +34,6 @@ router.post('/', (req, res) => {
             res.status(201).json(pro)
           })
       }).catch((error) => {
-        console.log(error)
         res.status(500).json({ message: error.message })
       });
   }
@@ -133,7 +132,6 @@ router.get('/:proId', (req, res) => {
   }
 });
 
-
 router.get('/payments/client_token', (req, res) => {
   generateClientToken().then((token) => {
       res.status(200).json({ token: token.clientToken })
@@ -192,5 +190,17 @@ router.post('/:proId/turn_vip', (req, res) => {
       });
   }
 });
+
+router.get('/:proId/chats', (req, res) => {
+  let proId = req.params.proId;
+
+  chatkit.getUserRooms({
+    userId: proId 
+  }).then((chats) => {
+    res.status(200).json(chats)
+  }).catch((error) => {
+    res.status(500).json({ message: error.message })
+  })
+})
 
 export const ProUserRouter = router;
