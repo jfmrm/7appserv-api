@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import { Demand, Quotation, Service } from '../../models';
-let router = Router();
 import { chatkit } from '../../../config';
 
+let router = Router();
 //Create quotation
 router.post('/', (req, res) => {
     let proId = req.body.proId;
@@ -15,10 +15,12 @@ router.post('/', (req, res) => {
     } else {
         new Quotation(proId, demandId, value, details).create()
         .then((quotation) => {
-            chatkit.createRoom({ creatorId: proid, name: quotation.pro.name, userIds: quotation.demand.customer.id })
-                .then(() => {
+            console.log(quotation.demand.customer)
+            return chatkit.createRoom({ creatorId: proId, name: `${quotation.pro.firstName} ${quotation.pro.lastName}`, userIds: [quotation.demand.customer.id] })
+                .then((room) => {
+                    quotation.chatRoom = room;
                     res.status(201).json(quotation)
-                })
+                });
         }).catch((error) => {
             res.status(500).json({ message: error.message })
         });
