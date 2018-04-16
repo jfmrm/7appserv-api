@@ -20,10 +20,6 @@ router.post('/', (req, res) => {
     let customer = new Customer(firstName, lastName, email, birthDate, null, id);
     customer.create()
       .then((customer) => {
-        const chatkit = new Chatkit({
-          instanceLocator: process.env.PUSHER_INSTACE_LOCATOR,
-          key: process.env.PUSHER_KEY,
-        });
         return Promise.all([
           Customer.updateDeviceToken(id, deviceToken),
           chatkit.createUser({id, name: firstName + " " + lastName, avatarUrl: `https://s3.amazonaws.com/7appserv/profilePic/customers/${id}.jpg`})
@@ -31,8 +27,7 @@ router.post('/', (req, res) => {
             res.status(201).json(customer)
         })
       }).catch((error) => {
-        console.log(error)
-        res.status(500).json({ message: error.message })
+        res.status(500).json({ message: error })
       });
   }
 });

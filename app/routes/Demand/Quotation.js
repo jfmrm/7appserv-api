@@ -15,14 +15,14 @@ router.post('/', (req, res) => {
     } else {
         new Quotation(proId, demandId, value, details).create()
         .then((quotation) => {
-            console.log(quotation.demand.customer)
             return chatkit.createRoom({ creatorId: proId, name: `${quotation.pro.firstName} ${quotation.pro.lastName}`, userIds: [quotation.demand.customer.id] })
                 .then((room) => {
-                    quotation.chatRoom = room;
-                    res.status(201).json(quotation)
+                    return Quotation.addChat(quotation, room.id)
+                }).then((quotation) => {
+                    res.status(201).json(quotation);
                 });
         }).catch((error) => {
-            res.status(500).json({ message: error.message })
+            res.status(500).json({ message: error })
         });
     }
 });
