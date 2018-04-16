@@ -99,4 +99,15 @@ router.patch('/:quotationId/accept', (req, res) => {
         });
 });
 
+router.get('/chats/:chatId', (req, res) => {
+    let chatId = req.params.chatId;
+
+    new Quotation().get('chat_id', chatId)
+        .then((quotation) => {
+            res.status(200).json(quotation)
+        }).catch((error) => {
+            res.status(500).json({ message: error })
+        })
+})
+
 export const QuotationRouter = router;
