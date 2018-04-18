@@ -138,4 +138,17 @@ export class Demand {
         throw error
       });
   }
+
+  static hasQuoted(proId, demandId) {
+    return Pool.query('SELECT value FROM quotation WHERE pro_id = ? AND demand_id = ?', [proId, demandId])
+      .then((results) => {
+        if (results[0]) {
+          return results[0].value
+        } else {
+          return false
+        }
+      }).catch((error) => {
+        throw error
+      })
+  }
 }
