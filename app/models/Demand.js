@@ -1,5 +1,6 @@
 import { Pool } from 'config';
 import { Customer, Place, ServiceType, Pro, ProVIP, Address, City } from 'models';
+import { getPic } from '../routes/helpers';
 
 export class Demand {
   constructor(customer, place, serviceType, dueDate, details, isPublic, pro, isOpen, lastModified, demandId) {

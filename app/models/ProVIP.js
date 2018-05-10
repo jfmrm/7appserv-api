@@ -1,5 +1,6 @@
 import { Pro } from 'models';
 import { Pool } from 'config';
+import {getPic} from '../../app/routes/helpers';
 
 export class ProVIP extends Pro {
   constructor (pro, ein, companyName, licenseNumber){
@@ -66,15 +67,17 @@ export class ProVIP extends Pro {
                        WHERE pro_vip.pro_id = pro.id AND address.city_id = ?`, [cityId])
       .then((results) => {
         return results.map((proVIPListItem) => {
-          return {
-            proId: proVIPListItem.id,
-            companyName: proVIPListItem.company_name,
-            rate: proVIPListItem.rate,
-            latitude: proVIPListItem.latitude,
-            longitude: proVIPListItem.longitude,
-            actionRadious: proVIPListItem.action_radious,
-            pic: `https://s3.amazonaws.com/7appserv/profilePic/pros/${proVIPListItem.id}.jpg`
-          }
+          return getPic(`profilePic/pros/${proVIPListItem.id}.jpg`).then((pic) => {
+            return {
+              proId: proVIPListItem.id,
+              companyName: proVIPListItem.company_name,
+              rate: proVIPListItem.rate,
+              latitude: proVIPListItem.latitude,
+              longitude: proVIPListItem.longitude,
+              actionRadious: proVIPListItem.action_radious,
+              pic
+            }  
+          })
         })
       }).catch((error) => {
         throw error

@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { ServiceType } from '../../models';
+import { getPic } from '../helpers';
 
 let router = Router();
 
@@ -28,7 +29,10 @@ router.get('/:serviceTypeId', (req, res) => {
 
     ServiceType.get('id', serviceTypeId)
         .then((serviceType) => {
-            res.status(200).json(serviceType);
+            getPic(`serviceTypePic/${serviceTypeId}.jpg`).then((pic) => {
+                serviceType.pic = pic
+                res.status(200).json(serviceType);
+            })
         }).catch((error) => {
             res.status(500).json({ message: error})
         })

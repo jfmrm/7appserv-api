@@ -78,7 +78,9 @@ export class Customer extends User {
     ]).then((data) => {
       for(let i = 0; i < data.length; i++) {
         for(let j = 0; j < data[i].length; j++) {
-          data[i][j].pic = `https://s3.amazonaws.com/7appserv/serviceTypePic/${data[i][j].serviceTypeId}.jpg`
+          getPic(`serviceTypePic/${data[i][j].serviceTypeId}.jpg`).then((pic) => {
+            data[i][j].pic = pic
+          })
         }
       }
       let projectsList = {

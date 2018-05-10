@@ -61,14 +61,13 @@ export let uploadMomentPic = multer({
     })
 })
 
-export function getPic(path, proId) {
+export function getPic(key) {
   return new Promise((resolve, reject) => {
-    s3.getObject({
-      Bucket: process.env.MY_BUCKET,
-      Key: path + proId + '.jpg'
-    }, (error, data) => {
-      if (error) reject(error)
-      resolve(data)
-    })
+    s3.getSignedUrl('getObject', 
+      {Bucket: '7appserv', Key: key}, 
+      (err, url) => {
+        if (err) reject(err)
+        resolve(url)
+      })
   })
 }

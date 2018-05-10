@@ -30,8 +30,10 @@ router.post('/', (req, res) => {
           Pro.updateDeviceToken(pro.id, deviceToken),
           chatkit.createUser({ id: pro.id, name: `${pro.firstName} ${pro.lastName}`, avatarURL: `https://s3.amazonaws.com/7appserv/profilePic/pros/${pro.id}.jpg`})
         ]).then(() => {
-            pro.profilePic = `https://s3.amazonaws.com/7appserv/profilePic/pros/${pro.id}.jpg`
-            res.status(201).json(pro)
+            getPic(`profilePic/pros/${pro.id}.jpg`).then((pic) => {
+              pro.profilePic = pic
+              res.status(201).json(pro)
+            })
           })
       }).catch((error) => {
         res.status(500).json({ message: error })
@@ -89,8 +91,10 @@ router.put('/:proId', (req, res) => {
       }).then((address) => {
         return new Pro(firstName, lastName, email, null, birthDate, address, description, null, proId).update()
       }).then((pro) => {
-        pro.profilePic = `https://s3.amazonaws.com/7appserv/profilePic/pros/${pro.id}.jpg`;
-        res.status(200).json(pro)
+        getPic(`profilePic/pros/${pro.id}.jpg`).then((pic) => {
+          pro.profilePic = pic
+          res.status(200).json(pro)
+        })
       }).catch((error) => {
         res.status(500).json({ message: error.message })
       });
@@ -124,8 +128,10 @@ router.get('/:proId', (req, res) => {
   } else {
     new Pro().get('id', proId)
       .then((pro) => {
-        pro.profilePic = `https://s3.amazonaws.com/7appserv/profilePic/pros/${pro.id}.jpg`
-        res.status(200).json(pro)
+        getPic(`profilePic/pros/${pro.id}.jpg`).then((pic) => {
+          pro.profilePic = pic
+          res.status(200).json(pro)
+        })
       }).catch((error) => {
         res.status(500).json({ message: error.message })
       });

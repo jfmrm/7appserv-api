@@ -1,5 +1,6 @@
 import { Pool } from 'config';
 import { Question } from './';
+import {getPic} from '../../app/routes/helpers';
 
 export class ServiceType {
   
@@ -67,8 +68,10 @@ export class ServiceType {
       .then((results) => {
         return Promise.all(results.map((serviceType) => {
           let element = new ServiceType(serviceType.type, JSON.parse(serviceType.form), serviceType.id, serviceType.reference_counter)
-          element.pic = `https://s3.amazonaws.com/7appserv/serviceTypePic/${serviceType.id}.jpg`
-          return element
+          return getPic(`serviceTypePic/${serviceType.id}.jpg`).then((pic) => {
+            element.pic = pic
+            return element
+          })
         }))
       }).catch((error) => {
         throw error

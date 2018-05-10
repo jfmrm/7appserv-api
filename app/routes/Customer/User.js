@@ -20,11 +20,13 @@ router.post('/', (req, res) => {
     let customer = new Customer(firstName, lastName, email, birthDate, null, id);
     customer.create()
       .then((customer) => {
-        return Promise.all([
-          Customer.updateDeviceToken(id, deviceToken),
-          chatkit.createUser({id, name: firstName + " " + lastName, avatarUrl: `https://s3.amazonaws.com/7appserv/profilePic/customers/${id}.jpg`})
-        ]).then(() => {
-            res.status(201).json(customer)
+        return getPic(`profilePic/customers/${id}.jpg`).then((pic) => {
+          return Promise.all([
+            Customer.updateDeviceToken(id, deviceToken),
+            chatkit.createUser({id, name: firstName + " " + lastName, avatarUrl: pic})
+          ]).then(() => {
+              res.status(201).json(customer)
+          })
         })
       }).catch((error) => {
         res.status(500).json({ message: error })
@@ -71,8 +73,10 @@ router.put('/:customerId', (req, res) => {
   } else {
     new Customer(firstName, lastName, email, null, birthDate, customerId).update()
       .then((customer) => {
-        customer.pic = `https://s3.amazonaws.com/7appserv/profilePic/customers/${customerId}.jpg`
-        res.status(200).json(customer)
+        getPic(`profilePic/customers/${customerId}.jpg`).then((pic) => {
+          customer.pic = pic
+          res.status(200).json(customer)
+        })
       }).catch((error) => {
         res.status(500).json({ message: error.message })
       });
@@ -102,8 +106,10 @@ router.get('/:customerId', (req, res) => {
   
   new Customer().get('id', customerId)
     .then((customer) => {
-      customer.pic = `https://s3.amazonaws.com/7appserv/profilePic/customers/${customerId}.jpg`      
-      res.status(200).json(customer)
+      getPic(`profilePic/customers/${customerId}.jpg`).then((pic) => {
+        customer.pic = pic      
+        res.status(200).json(customer)
+      })
   }).catch((error) => {
     res.status(500).json({ message: error.message })
   });
