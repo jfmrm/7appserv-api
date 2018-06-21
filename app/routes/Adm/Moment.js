@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { Moment, ServiceType } from '../../models';
-import { uploadMomentPic } from '../helpers/aws/s3';
+import { uploadMomentPic, getPic } from '../helpers/aws/s3';
 
 let router = Router();
 
@@ -34,8 +34,10 @@ router.get('/:momentId', (req, res) => {
 
     Moment.get('id', momentId)
         .then(moment => {
-            moment.pic = `https://s3.amazonaws.com/7appserv/momentPic/${momentId}.jpg`
-            res.status(200).json(moment)
+            return getPic(`momentPic/${momentId}.jpg`).then((pic) => {
+                moment.pic = pic
+                res.status(200).json(moment)
+            })
         }).catch((error) => {
             res.status(500).json({ message: error.message })
         });

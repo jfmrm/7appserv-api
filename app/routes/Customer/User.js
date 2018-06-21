@@ -3,6 +3,7 @@ import { Router } from 'express';
 import { uploadCustomerProfilePic,
          getPic } from '../helpers';
 import { verifyIdentity } from '../../../config/auth';
+import { chatkit } from '../../../config'; 
 
 let router = Router();
 //creates a new Customer
@@ -20,12 +21,16 @@ router.post('/', (req, res) => {
     let customer = new Customer(firstName, lastName, email, birthDate, null, id);
     customer.create()
       .then((customer) => {
-        return Customer.updateDeviceToken(id, deviceToken)
-          .then(() => {
-            res.status(201).json(customer)
+        return getPic(`profilePic/customers/${id}.jpg`).then((pic) => {
+          return Promise.all([
+            Customer.updateDeviceToken(id, deviceToken),
+            chatkit.createUser({id, name: firstName + " " + lastName, avatarUrl: pic})
+          ]).then(() => {
+              res.status(201).json(customer)
           })
+        })
       }).catch((error) => {
-        res.status(500).json({ message: error.message })
+        res.status(500).json({ message: error })
       });
   }
 });
@@ -73,8 +78,10 @@ router.put('/:customerId', (req, res) => {
   } else {
     new Customer(firstName, lastName, email, null, birthDate, customerId).update()
       .then((customer) => {
-        customer.pic = `https://s3.amazonaws.com/7appserv/profilePic/customers/${momentId}.jpg`
-        res.status(200).json(customer)
+        getPic(`profilePic/customers/${customerId}.jpg`).then((pic) => {
+          customer.pic = pic
+          res.status(200).json(customer)
+        })
       }).catch((error) => {
         res.status(500).json({ message: error.message })
       });
@@ -104,8 +111,10 @@ router.get('/:customerId', (req, res) => {
   
   new Customer().get('id', customerId)
     .then((customer) => {
-      customer.pic = `https://s3.amazonaws.com/7appserv/profilePic/customers/${customerId}.jpg`      
-      res.status(200).json(customer)
+      getPic(`profilePic/customers/${customerId}.jpg`).then((pic) => {
+        customer.pic = pic      
+        res.status(200).json(customer)
+      })
   }).catch((error) => {
     res.status(500).json({ message: error.message })
   });
@@ -202,4 +211,15 @@ router.get('/:customerId/projects', (req, res) => {
     });
 });
 
+router.get('/:customerId/chats', (req, res) => {
+  let customerId = req.params.customerId;
+
+  chatkit.getUserRooms({
+    userId: customerId
+  }).then((chats) => {
+    res.status(200).json(chats)
+  }).catch((error) => {
+    res.status(500).json({ message: error.message })
+  })
+})
 export const CustomerUserRouter = router;

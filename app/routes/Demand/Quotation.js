@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { Demand, Quotation, Service } from 'models';
-import { startChat } from '../helpers';
-let router = Router();
+import { Demand, Quotation, Service } from '../../models';
+import { chatkit } from '../../../config';
 
+let router = Router();
 //Create quotation
 router.post('/', (req, res) => {
     let proId = req.body.proId;
@@ -15,11 +15,15 @@ router.post('/', (req, res) => {
     } else {
         new Quotation(proId, demandId, value, details).create()
         .then((quotation) => {
-                startChat(proId, quotation.demand.customer.id, details).then((chat) => console.log(chat)) 
-                res.status(201).json(quotation)
-            }).catch((error) => {
-                res.status(500).json({ message: error.message })
-            });
+            return chatkit.createRoom({ creatorId: proId, name: `${quotation.pro.firstName} ${quotation.pro.lastName}`, userIds: [quotation.demand.customer.id] })
+                .then((room) => {
+                    return Quotation.addChat(quotation, room.id)
+                }).then((quotation) => {
+                    res.status(201).json(quotation);
+                });
+        }).catch((error) => {
+            res.status(500).json({ message: error })
+        });
     }
 });
   
@@ -64,8 +68,10 @@ router.delete('/:quotationId', (req, res) => {
     
     new Quotation().get('id', quotationId)
         .then((quotation) => {
-            quotation.pic = `https://s3.amazonaws.com/7appserv/momentPic/${quotation.pro.id}.jpg`
-            res.status(200).json(quotation);
+            getPic(`momentPic/${quotation.pro.id}.jpg`).then((pic) => {
+                quotation.pic = pic
+                res.status(200).json(quotation);
+            })
         }).catch((error) => {
             res.status(500).json({ message: error.message })
         });
@@ -91,8 +97,19 @@ router.patch('/:quotationId/accept', (req, res) => {
         .then((service) => {
             res.status(201).json(service)
         }).catch((error) => {
-            res.status(500).json({ message: error.message })
+            res.status(500).json({ message: error })
         });
 });
+
+router.get('/chats/:chatId', (req, res) => {
+    let chatId = req.params.chatId;
+
+    new Quotation().get('chat_id', chatId)
+        .then((quotation) => {
+            res.status(200).json(quotation)
+        }).catch((error) => {
+            res.status(500).json({ message: error })
+        })
+})
 
 export const QuotationRouter = router;

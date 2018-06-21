@@ -3,6 +3,7 @@ import { Router } from 'express';
 import { uploadProProfilePic,
          getPic,
          generateClientToken } from '../helpers';
+import { chatkit } from '../../../config';
 
 let router = Router();
 //creates new Pro
@@ -10,14 +11,13 @@ router.post('/', (req, res) => {
   let firstName = req.body.firstName;
   let lastName = req.body.lastName;
   let email = req.body.email;
-  let password = req.body.password;
   let birthDate = req.body.birthDate;
   let address = req.body.address;
   let description = req.body.description;
   let id = req.body.id;
   let deviceToken = req.body.deviceToken;
 
-  if (!firstName || !lastName || !email || !password || !birthDate || !address || !description || !id || !deviceToken) {
+  if (!firstName || !lastName || !email || !birthDate || !address || !description || !id || !deviceToken) {
     res.status(400).json({ message: 'missing parameters' });
   } else {
     new City().get('id', address.cityId)
@@ -26,13 +26,17 @@ router.post('/', (req, res) => {
         let pro = new Pro(firstName, lastName, email, birthDate, addr, description, null, id);
         return pro.create()
       }).then((pro) => {
-        return Pro.updateDeviceToken(pro.id, deviceToken)
-          .then(() => {
-            res.status(201).json(pro)
+        return Promise.all([
+          Pro.updateDeviceToken(pro.id, deviceToken),
+          chatkit.createUser({ id: pro.id, name: `${pro.firstName} ${pro.lastName}`, avatarURL: `https://s3.amazonaws.com/7appserv/profilePic/pros/${pro.id}.jpg`})
+        ]).then(() => {
+            getPic(`profilePic/pros/${pro.id}.jpg`).then((pic) => {
+              pro.profilePic = pic
+              res.status(201).json(pro)
+            })
           })
       }).catch((error) => {
-        console.log(error)
-        res.status(500).json({ message: error.message })
+        res.status(500).json({ message: error })
       });
   }
 });
@@ -61,17 +65,6 @@ router.patch('/:proId/profile_picture', uploadProProfilePic.single('profilePic')
   res.status(200).json({ message: 'success' })
 });
 
-router.get('/:proId/profile_picture', (req, res) => {
-  let proId = req.params.proId;
-
-  getPic('profilePic/pros/', proId)
-    .then((profilePic) => {
-      res.status(200).json(profilePic);
-    }).catch((error) => {
-      res.status(500).json({ message: error });
-    });
-});
-
 //edit Pro
 //rever error
 router.put('/:proId', (req, res) => {
@@ -98,7 +91,10 @@ router.put('/:proId', (req, res) => {
       }).then((address) => {
         return new Pro(firstName, lastName, email, null, birthDate, address, description, null, proId).update()
       }).then((pro) => {
-        res.status(200).json(pro)
+        getPic(`profilePic/pros/${pro.id}.jpg`).then((pic) => {
+          pro.profilePic = pic
+          res.status(200).json(pro)
+        })
       }).catch((error) => {
         res.status(500).json({ message: error.message })
       });
@@ -132,23 +128,14 @@ router.get('/:proId', (req, res) => {
   } else {
     new Pro().get('id', proId)
       .then((pro) => {
-        res.status(200).json(pro)
+        getPic(`profilePic/pros/${pro.id}.jpg`).then((pic) => {
+          pro.profilePic = pic
+          res.status(200).json(pro)
+        })
       }).catch((error) => {
         res.status(500).json({ message: error.message })
       });
   }
-});
-
-//list pros avable on the given city
-router.get('/vip/cities/:cityId', (req, res) => {
-  let cityId = req.params.cityId
-
-  new ProVIP().getProVIPList(cityId)
-    .then((proVIPList) => {
-      res.status(200).json(proVIPList)
-    }).catch((error) => {
-      res.status(500).json({ message: error.message })
-    });
 });
 
 router.get('/payments/client_token', (req, res) => {
@@ -174,9 +161,52 @@ router.get('/:proId/projects', (req, res) => {
       }
       res.status(200).json(serviceList)
   }).catch((error) => {
-      console.log(error)
       res.status(500).json({ message: error })
   });
 });
+
+//list pros avable on the given city
+router.get('/vip/cities/:cityId', (req, res) => {
+  let cityId = req.params.cityId;
+
+  ProVIP.getProVIPList(cityId)
+    .then((proVIPList) => {
+      res.status(200).json(proVIPList)
+    }).catch((error) => {
+      res.status(500).json({ message: error.message })
+    });
+});
+
+router.post('/:proId/turn_vip', (req, res) => {
+  let proId = req.params.proId;
+  let ein = req.body.ein;
+  let companyName = req.body.companyName;
+  let licenseNumber = req.body.licenseNumber;
+
+  if(!ein || !companyName || !licenseNumber) {
+    res.status(400).json({ message: "missing parameters" })
+  } else {
+    new Pro().get('id', proId)
+      .then((pro) => {
+        return new ProVIP(pro, ein, companyName, licenseNumber).create();
+      }).then((proVIP) => {
+        res.status(201).json(proVIP);
+      }).catch((error) => {
+        res.status(500).json({ message: error });
+      });
+  }
+});
+
+router.get('/:proId/chats', (req, res) => {
+  let proId = req.params.proId;
+
+  chatkit.getUserRooms({
+    userId: proId 
+  }).then((chats) => {
+    res.status(200).json(chats)
+  }).catch((error) => {
+    res.status(500).json({ message: error.message })
+  })
+})
 
 export const ProUserRouter = router;

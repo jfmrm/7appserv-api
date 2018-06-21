@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { ServiceType } from '../../models';
+import { getPic } from '../helpers';
 
 let router = Router();
 
@@ -20,6 +21,20 @@ router.get('/:serviceTypeId/form', (req, res) => {
             res.status(200).json(form)
         }).catch((error) => {
             res.status(500).json({ message: error.message })
+        })
+})
+
+router.get('/:serviceTypeId', (req, res) => {
+    let serviceTypeId = req.params.serviceTypeId;
+
+    ServiceType.get('id', serviceTypeId)
+        .then((serviceType) => {
+            getPic(`serviceTypePic/${serviceTypeId}.jpg`).then((pic) => {
+                serviceType.pic = pic
+                res.status(200).json(serviceType);
+            })
+        }).catch((error) => {
+            res.status(500).json({ message: error})
         })
 })
 

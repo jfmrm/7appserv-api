@@ -26,7 +26,6 @@ router.post('/public', (req, res) => {
         }).then((demand) => {
             res.status(201).json(demand)
         }).catch((error) => {
-            console.log(error)
             res.status(500).json({ message: error.message })
         });
     }
@@ -54,7 +53,6 @@ router.post('/private', (req, res) => {
       }).then((demand) => {
         res.status(201).json(demand)
       }).catch((error) => {
-        console.log(error)
         res.status(500).json({ message: error.message })
       })
     }
@@ -106,11 +104,20 @@ router.delete('/:demandId', (req, res) => {
 //get demand
 router.get('/:demandId', (req, res) => {
     let demandId = req.params.demandId;
+    let proId = req.query.proId;
 
     new Demand().get('id', demandId)
     .then((demand) => {
-        res.status(200).json(demand)
-    }).catch((error) => {
+        if (proId) {
+          return Demand.hasQuoted(proId, demandId)
+            .then((value) => {
+              demand.value = value;
+              res.status(200).json(demand)
+            })
+          } else {
+            res.status(200).json(demand)
+          } 
+        }).catch((error) => {
         res.status(500).json({ message: error.message })
     });
 });

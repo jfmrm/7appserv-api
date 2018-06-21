@@ -1,5 +1,6 @@
 import { Pool } from 'config';
 import { Customer, Place, ServiceType, Pro, ProVIP, Address, City } from 'models';
+import { getPic } from '../routes/helpers';
 
 export class Demand {
   constructor(customer, place, serviceType, dueDate, details, isPublic, pro, isOpen, lastModified, demandId) {
@@ -137,5 +138,18 @@ export class Demand {
       }).catch((error) => {
         throw error
       });
+  }
+
+  static hasQuoted(proId, demandId) {
+    return Pool.query('SELECT value FROM quotation WHERE pro_id = ? AND demand_id = ?', [proId, demandId])
+      .then((results) => {
+        if (results[0]) {
+          return results[0].value
+        } else {
+          return false
+        }
+      }).catch((error) => {
+        throw error
+      })
   }
 }

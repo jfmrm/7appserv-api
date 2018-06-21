@@ -2,9 +2,10 @@ import { Pool } from 'config';
 import { Pro, Demand } from 'models';
 import { isError } from 'util';
 import { Service } from './Service';
+import { POINT_CONVERSION_COMPRESSED } from 'constants';
 
 export class Quotation {
-    constructor (pro, demand, value, details, visulized, id, serviceId) {
+    constructor (pro, demand, value, details, visulized, id, serviceId, chatId) {
         this.pro = pro;
         this.demand = demand;
         this.value = value;
@@ -12,11 +13,12 @@ export class Quotation {
         this.visulized = visulized;
         this.id = id;
         this.serviceId = serviceId;
+        this.chatId = chatId;
     }
 
     create() {
-        return Pool.query(`INSERT INTO quotation (pro_id, demand_id, value, details)
-                            VALUES (?, ?, ?, ?)`, [this.pro, this.demand, this.value, this.details])
+        return Pool.query(`INSERT INTO quotation (pro_id, demand_id, value, details, chat_id)
+                            VALUES (?, ?, ?, ?, ?)`, [this.pro, this.demand, this.value, this.details, this.chatId])
             .then((results) => {
                 return this.get('id', results.insertId)
             }).catch((error) => {
@@ -31,7 +33,7 @@ export class Quotation {
                     new Pro().get('id', results[0].pro_id),
                     new Demand().get('id', results[0].demand_id),
                 ]).then((res) => {
-                    return new Quotation(res[0], res[1], results[0].value, results[0].details, results[0].visulized, results[0].id, results[0].service_id)
+                    return new Quotation(res[0], res[1], results[0].value, results[0].details, results[0].visulized, results[0].id, results[0].service_id, results[0].chat_id)
                 })
             }).catch((error) => {
                 throw error
@@ -63,12 +65,12 @@ export class Quotation {
 
     getQuotationListFromDemand(demandId) {
         return Promise.all([
-            Pool.query(`SELECT pro_vip.company_name, pro.rate, quotation.value, quotation.id 
+            Pool.query(`SELECT pro_vip.company_name, pro.rate, quotation.value, quotation.id, quotation.chat_id
                         FROM quotation
                         INNER JOIN pro ON pro.id = quotation.pro_id
                         INNER JOIN pro_vip ON pro.id
                         WHERE demand_id = ? AND pro.pro_type = 'VIP'`, [demandId]),
-            Pool.query(`SELECT pro.first_name, pro.last_name, quotation.value, quotation.id
+            Pool.query(`SELECT pro.first_name, pro.last_name, quotation.value, quotation.id, quotation.chat_id
                         FROM quotation
                         INNER JOIN pro ON pro.id = quotation.pro_id
                         WHERE demand_id = ? AND pro.pro_type = 'Standard'`, [demandId])
@@ -78,7 +80,8 @@ export class Quotation {
                     companyName: vipQuotation.companyName,
                     proRate: vipQuotation.rate,
                     value: vipQuotation.value,
-                    quotationId: vipQuotation.id
+                    quotationId: vipQuotation.id,
+                    chatId: vipQuotation.chat_id
                 }
             })
             let standrdQuotations = results[1].map((standardQuotation) => {
@@ -87,7 +90,8 @@ export class Quotation {
                     proLastName: standardQuotation.last_name,
                     //add rating
                     value: standardQuotation.value,
-                    quotationId: standardQuotation.id
+                    quotationId: standardQuotation.id,
+                    chatId: standardQuotation.chat_id
                 }
             })
 
@@ -112,23 +116,33 @@ export class Quotation {
     }
 
     accept(quotationId) {
-        return Pool.query('UPDATE quotation SET chosen = true WHERE id = ?', [quotationId])
-            .then((results) => {
-                return Pool.query('SELECT pro_id, demand_id FROM quotation WHERE id = ?', [quotationId])
-            }).then((results) => {
-                let p = new Demand().close(results[0].demand_id)
-                return {p, results}
-            }).then(({p, results}) => {
-                return p.then((closed) => {
-                    p = new Demand().get('id', results[0].demand_id)
-                    return {p, results}
-                })
-            }).then(({p, results}) => {
-                return p.then((demand) => {
-                    return new Service(demand, results[0].pro_id).create()
-                })
+        return Promise.all([
+            Pool.query('UPDATE quotation SET chosen = true WHERE id = ?', [quotationId]),
+            Pool.query('SELECT demand_id FROM quotation WHERE id = ?', [quotationId])
+        ]).then((results) => {
+            return Promise.all([
+                Pool.query('UPDATE demand SET is_open = false WHERE id = ?', results[1][0].demand_id),
+                Pool.query('SELECT * FROM quotation WHERE id = ?', [quotationId]),
+                new Demand().get('id', results[1][0].demand_id)
+            ])
+        }).then((results) => {
+            return new Service(results[2], results[1][0].pro_id, results[1][0].value).create()
+        }).catch((error) => {
+            throw error
+        })
+    }
+
+    static addChat(quotation, chatId) {
+        return Pool.query('UPDATE quotation SET chat_id = ? WHERE id = ?', [chatId, quotation.id])
+            .then((result) => {
+                if(result.affectedRows == 1) {
+                    quotation.chatId = chatId;
+                    return quotation
+                } else {
+                    throw new Error('Can not update quotation')
+                }
             }).catch((error) => {
                 throw error
-            });
+            })
     }
 }

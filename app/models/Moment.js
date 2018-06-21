@@ -128,10 +128,14 @@ export class Moment {
                             for (let i = 0; i < serviceTypes.length; i++) {
                                 const element = serviceTypes[i]
                                 moment.serviceTypes.push(new ServiceType(element.type, {}, element.id))
-                                moment.serviceTypes[moment.serviceTypes.length -1].pic = `https://s3.amazonaws.com/7appserv/serviceTypePic/${element.id}.jpg`
+                                getPic(`serviceTypePic/${element.id}.jpg`).then((pic) => {
+                                    moment.serviceTypes[moment.serviceTypes.length -1].pic = pic
+                                })
                             }
-                            moment.pic = `https://s3.amazonaws.com/7appserv/momentPic/${moment.id}.jpg`
-                            return moment
+                            return getPic(`momentPic/${moment.id}.jpg`).then((pic) => {
+                                moment.pic = pic
+                                return moment
+                            })
                         })
                         .catch(error => {
                             throw error
